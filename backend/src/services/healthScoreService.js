@@ -1,3 +1,10 @@
+// Categorize by thresholds
+function categorize(score) {
+  if (score < 40) return 'at_risk';
+  if (score < 70) return 'medium';
+  return 'healthy';
+}
+
 // Example health score calculation
 function calculate(customer) {
   // Simple fake formula: loginFrequency * featureAdoption - supportTickets
@@ -19,4 +26,4 @@ function calculateDetailed(customer) {
   };
 }
 
-module.exports = { calculate, calculateDetailed };
+module.exports = { calculate, calculateDetailed, categorize };

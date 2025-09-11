@@ -7,6 +7,10 @@ services:
     restart: always
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/usr/src        # 👈 mounts local code into container
+      - /usr/src/app/node_modules     # 👈 keeps node_modules inside container
+
     environment:
       - DB_USER=postgres
       - DB_PASS=postgres
