@@ -83,10 +83,14 @@ function calculate({ featureScore, loginScore, supportScore, paymentScore, apiSc
 // }
 
 function calculateDetailed(customer) {
+  
   return {
-    loginFrequency: customer.login_frequency,
+    events: customer.events,
     featureAdoption: customer.feature_adoption,
     supportTickets: customer.support_tickets,
+    customerName: customer.customer_name,
+    customerSegment: customer.segment,
+    customerId: customer.customer_id,
     score: calculate(customer),
   };
 }

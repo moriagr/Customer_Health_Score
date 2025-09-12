@@ -1,7 +1,6 @@
-const { calcFeatureAdoptionScore, calcLoginAndApiScore, calcPaymentScore, calcSupportScore, calculate, categorize } = require("../services/healthScoreService");
+const { calcFeatureAdoptionScore, calcLoginAndApiScore, calcPaymentScore, calculateDetailed, calcSupportScore, calculate, categorize } = require("../services/healthScoreService");
 
 const customerModel = require('../models/customerModel');
-const healthScoreService = require('../services/healthScoreService');
 import { customerMapType, CustomerRow, partCustomer } from '../type/healthScoreType';
 import { Request, Response } from 'express';
 
@@ -176,7 +175,7 @@ async function getCustomerHealth(req: Request, res: Response) {
         const customer = await customerModel.getById(req.params.id);
         if (!customer) return res.status(404).json({ error: 'Customer not found' });
 
-        const health = healthScoreService.calculateDetailed(customer);
+        const health = calculateDetailed(customer);
         res.json(health);
     } catch (err) {
         if (err instanceof Error) {
@@ -189,8 +188,9 @@ async function getCustomerHealth(req: Request, res: Response) {
 
 async function recordEvent(req: Request, res: Response) {
     try {
-        const { eventType } = req.body;
-        await customerModel.addEvent(req.params.id, eventType);
+        console.log('✌️req.body --->', req.body);
+        const { options } = req.body;
+        await customerModel.addRecord(req.params.id, options);
         res.status(201).json({ message: 'Event recorded' });
     } catch (err) {
         if (err instanceof Error) {

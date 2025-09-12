@@ -6,7 +6,7 @@ const dashboardRoute = require('./routes/dashboard');
 
 const app = express();
 app.use(bodyParser.json());
-
+app.use(bodyParser.urlencoded({ extended: true }));
 // Routes
 app.use('/api/customers', customerRoutes);
 app.use('/api/dashboard', dashboardRoute);
