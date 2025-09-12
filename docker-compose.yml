@@ -9,7 +9,7 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/usr/src        # 👈 mounts local code into container
-      - /usr/src/app/node_modules     # 👈 keeps node_modules inside container
+      # - /usr/node_modules     # 👈 keeps node_modules inside container
 
     environment:
       - DB_USER=postgres
@@ -19,6 +19,7 @@ services:
       - DB_NAME=customer_health
       - PORT=8000
     depends_on:
+      # - seeder
       - db
 
   frontend:
@@ -43,6 +44,20 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+  
+  # seeder:
+  #   build: ./backend
+  #   command: sh -c "npm install && node /backend/db/generateData.js"
+  #   volumes:
+  #     - ./backend:/usr/db
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - DB_USER=postgres
+  #     - DB_PASS=postgres
+  #     - DB_HOST=db
+  #     - DB_PORT=5432
+  #     - DB_NAME=customer_health
 
 volumes:
   db-data:
