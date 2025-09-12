@@ -4,21 +4,15 @@ import {
     Pie,
     Cell,
     Tooltip,
-    Legend,
     ResponsiveContainer,
 } from "recharts";
 import { Customer } from "../../types/customer";
 import { categorizeCustomer, HealthCategory } from "../../utils/healthUtils";
+import { COLORS } from "../../utils/colors";
 
 interface Props {
     customers: Customer[];
 }
-
-const COLORS: Record<HealthCategory, string> = {
-    'At Risk': "#e74c3c",   // red
-    Middle: "#f1c40f",     // yellow
-    Healthy: "#2ecc71",     // green
-};
 
 type PieData = {
     name: string;
