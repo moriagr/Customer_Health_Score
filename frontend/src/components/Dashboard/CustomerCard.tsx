@@ -1,47 +1,96 @@
 import React, { useEffect, useState } from 'react';
-import { fetchCustomerDetail } from '../../services/customerApi';
-import { CustomerDetail as CustomerDetailType } from '../../types/customer';
+import { fetchCurrentCustomers } from '../../services/api';
+import { CurrCustomerDetail, CustomerDetail as CustomerDetailType } from '../../types/customer';
 import { Card } from '../UI/Card';
+import { Loading } from '../UI/Loading';
+import { ErrorBox } from '../UI/ErrorBox';
+import { EmptyDataMessage } from '../UI/EmptyDataMessage';
 
 interface Props {
-  customerId: number;
-  onBack: () => void;
+    customerId: number;
+    onBack: () => void;
 }
 
 export const CustomerDetail: React.FC<Props> = ({ customerId, onBack }) => {
-  const [customer, setCustomer] = useState<CustomerDetailType | null>(null);
+    const [customer, setCustomer] = useState<CurrCustomerDetail | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchCustomerDetail(customerId).then(setCustomer);
-  }, [customerId]);
+    useEffect(() => {
+        getData();
+    }, [customerId]);
 
-  if (!customer) return <p>Loading...</p>;
+    function getData() {
+        fetchCurrentCustomers(customerId)
+            .then((data) => {
+                setCustomer(data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error(err.message);
+                setError('Failed to load customer details.');
+                setLoading(false);
+            });
+    }
+    function printDate(date: Date | null): string {
+        return (date ? JSON.stringify(date) : "N/A");
+    }
 
-  return (
-    <div style={{ padding: 20 }}>
-      <button onClick={onBack}>Back</button>
-      <h2>{customer.name}</h2>
-      <p>Segment: {customer.segment}</p>
-      <p>Health Score: {customer.healthScore}</p>
+    if (loading) return <Loading />;
+    if (error) return <ErrorBox error={error} goBack={onBack} tryAgain={getData} />;
+    if (!customer) return <EmptyDataMessage />;
 
-      <h3>Events</h3>
-      <div>
-        {customer.openTickets + customer.closedTickets > 0 && (
-          <Card>
-            <p>Open Tickets: {customer.openTickets}</p>
-            <p>Closed Tickets: {customer.closedTickets}</p>
-            <p>High Priority Open Tickets: {customer.highPriorityOpenTickets}</p>
-          </Card>
-        )}
+    console.log('✌️customer --->', customer);
+    return (
+        <div style={{ padding: 20 }}>
+            <button onClick={onBack}>Back</button>
+            <h2>{JSON.stringify(customer.customerName)}</h2>
+            <p>Segment: {JSON.stringify(customer.customerSegment)}</p>
+            <p>Health Score: {JSON.stringify(customer.score) ?? 'N/A'}{customer.score ? '%' : ''}</p>
 
-        <Card>
-          <p>Login Count: {customer.loginCount}</p>
-          <p>Feature Adoption: {customer.featureAdoption}%</p>
-          <p>Late Invoices: {customer.lateInvoices}</p>
-          <p>Total Invoices: {customer.totalInvoices}</p>
-          <p>API Usage Change: {customer.apiUsageChange}%</p>
-        </Card>
-      </div>
-    </div>
-  );
+            {/* Events */}
+            <h3>Events</h3>
+            {customer.events && customer.events.length > 0 ? (
+                customer.events.map((event, idx) => {
+                    return <Card key={idx} style={{ marginBottom: 10 }}>
+                        <p><strong>Event:</strong> {event.event_type}</p>
+                        <p><strong>Date:</strong> {printDate(event.created_at)}</p>
+                        <p><strong>Description:</strong> {JSON.stringify(event.event_data)}</p>
+                    </Card>
+                })
+            ) : (
+                <p>No events found.</p>
+            )}
+
+            {/* Tickets */}
+            <h3>Tickets</h3>
+            {customer.tickets && customer.tickets.length > 0 ? (
+                customer.tickets.map((ticket) => (
+                    <Card key={ticket.id} style={{ marginBottom: 10 }}>
+                        <p><strong>Status:</strong> {ticket.status}</p>
+                        <p><strong>Priority:</strong> {ticket.priority}</p>
+                        <p><strong>Created:</strong> {printDate(ticket.created_at)}</p>
+                        <p><strong>Resolved:</strong> {printDate(ticket.resolved_at)}</p>
+                    </Card>
+                ))
+            ) : (
+                <p>No tickets.</p>
+            )}
+
+            {/* Invoices */}
+            <h3>Invoices</h3>
+            {customer.invoices && customer.invoices.length > 0 ? (
+                customer.invoices.map((invoice) => (
+                    <Card key={invoice.id} style={{ marginBottom: 10 }}>
+                        <p><strong>Amount:</strong> ${invoice.amount}</p>
+                        <p><strong>Status:</strong> {invoice.status}</p>
+                        <p><strong>Due Date:</strong> {printDate(invoice.due_date)}</p>
+                        <p><strong>Paid Date:</strong> {printDate(invoice.paid_date) ?? 'Not paid'}</p>
+                    </Card>
+                ))
+            ) : (
+                <p>No invoices.</p>
+            )}
+        </div>
+    );
 };

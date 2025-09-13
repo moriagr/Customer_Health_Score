@@ -6,12 +6,12 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from "recharts";
-import { Customer } from "../../types/customer";
-import { categorizeCustomer, HealthCategory } from "../../utils/healthUtils";
+import { DashboardSummary } from "../../types/customer";
+import { HealthCategory } from "../../utils/healthUtils";
 import { COLORS } from "../../utils/colors";
 
 interface Props {
-    customers: Customer[];
+    summary: DashboardSummary | undefined;
 }
 
 type PieData = {
@@ -21,25 +21,18 @@ type PieData = {
 };
 
 
-export const HealthPieChart: React.FC<Props> = ({ customers }) => {
+export const HealthPieChart: React.FC<Props> = ({ summary }) => {
     // Count customers by category
-    const counts: Record<HealthCategory, number> = {
-        'At Risk': 0,
-        Middle: 0,
-        Healthy: 0,
-    };
+    if (!summary) {
+        return <div>No data available</div>
+    }
+    const { total_customers, ...categoryCounts } = summary;
+    const total = total_customers || 0;
 
-    customers.forEach((c) => {
-        const cat = categorizeCustomer(c.healthScore);
-        counts[cat]++;
-    });
-
-    const total = customers.length;
-
-    const data: PieData[] = (Object.keys(counts) as HealthCategory[]).map((cat) => ({
+    const data: PieData[] = (Object.keys(categoryCounts) as HealthCategory[]).map((cat) => ({
         name: cat,
-        value: counts[cat],
-        percentage: total ? ((counts[cat] / total) * 100).toFixed(1) : "0",
+        value: categoryCounts[cat],
+        percentage: total ? ((categoryCounts[cat] / total) * 100).toFixed(1) : "0",
     }));
 
     const renderLabel = (props: { percent: number }) =>

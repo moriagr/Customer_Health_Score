@@ -29,19 +29,15 @@ async function getAllCustomersWithHealth(req: Request, res: Response) {
         res.json({
             summary: {
                 total_customers: total,
-                healthy: healthyCount,
-                medium: mediumCount,
-                at_risk: atRiskCount,
-                percentages: {
-                    Healthy: ((healthyCount / total) * 100).toFixed(1),
-                    Middle: ((mediumCount / total) * 100).toFixed(1),
-                    "At Risk": ((atRiskCount / total) * 100).toFixed(1),
-                },
+                Healthy: healthyCount,
+                Middle: mediumCount,
+                "At Risk": atRiskCount,
             },
-            top_at_risk_customers: topAtRisk.map(c => ({
+            topAtRisk: topAtRisk.map(c => ({
                 id: c.id,
                 name: c.name,
                 score: c.score,
+                segment: c.segment,
             })),
         });
     } catch (err) {
@@ -137,15 +133,13 @@ async function getCustomers() {
                 featureScore, loginScore, supportScore, paymentScore, apiScore
             });
             result.push({
-                customerId: id,
+                id: id,
                 name: data.name,
                 segment: data.segment,
-                score: healthScore,
+                score: healthScore.total,
                 category: categorize(healthScore.total),
             })
         });
-
-
         return result;
     } catch (err) {
         if (err instanceof Error) {
@@ -188,7 +182,6 @@ async function getCustomerHealth(req: Request, res: Response) {
 
 async function recordEvent(req: Request, res: Response) {
     try {
-        console.log('✌️req.body --->', req.body);
         const { options } = req.body;
         await customerModel.addRecord(req.params.id, options);
         res.status(201).json({ message: 'Event recorded' });

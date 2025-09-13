@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   backend:
     build: ./backend
@@ -7,14 +5,14 @@ services:
     ports:
       - "8000:8000"
     restart: always
-    volumes:
-      - ./backend:/usr/src        # 👈 mounts local code into container
-      # - /usr/node_modules     # 👈 keeps node_modules inside container
+    # volumes:
+    #   - ./backend:/usr/src        # 👈 mounts local code into container
+    #   # - /usr/node_modules     # 👈 keeps node_modules inside container
     develop:
       watch:
         - path: ./backend
           action: sync
-          target: /usr/src
+          target: /usr
           ignore:
             - node_modules/
 
@@ -44,14 +42,14 @@ services:
       watch:
         - path: ./frontend
           action: sync
-          target: /usr/src
+          target: /usr
           ignore:
             - node_modules/
 
         - action: rebuild
           path: package.json
-    volumes:
-      - ./frontend:/usr/src
+    # volumes:
+    #   - ./frontend:/usr/src
 
   db:
     image: postgres:15

@@ -6,21 +6,21 @@ import { COLORS } from '../../utils/colors';
 import { categorizeCustomer } from '../../utils/healthUtils';
 
 interface Props {
-    customers: Customer[];
+    topCustomers: Customer[];
     onSelectCustomer: (id: number) => void;
 }
 
-export const TopAtRisk: React.FC<Props> = ({ customers, onSelectCustomer }) => {
-    const sorted = [...customers].sort((a, b) => a.healthScore - b.healthScore).slice(0, 5);
+export const TopAtRisk: React.FC<Props> = ({ topCustomers, onSelectCustomer }) => {
 
     return (
         <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', marginBottom: 40, justifyContent: 'center' }}>
-            {sorted.map(c => (
+            {topCustomers.length > 0 ? topCustomers.map(c => (
                 <Card key={c.id} style={{ cursor: 'pointer', width: 220 }} onClick={() => onSelectCustomer(c.id)}>
                     <h4>{c.name}</h4>
-                    <ProgressBar value={c.healthScore} color={COLORS[categorizeCustomer(c.healthScore)]} />
+                    {c.score}
+                    <ProgressBar value={Number(c.score)} color={COLORS[categorizeCustomer(c.score)]} />
                 </Card>
-            ))}
+            )): null}
         </div>
     );
 };
