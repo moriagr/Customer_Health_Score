@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { fetchDashboardData } from '../../services/api';
 import { Customer, DashboardSummary } from '../../types/customer';
 import { TopAtRisk } from './TopAtRisk';
@@ -6,7 +6,8 @@ import { HealthPieChart } from './HealthPieChart';
 import { CustomerList } from './CustomerTable';
 import { CustomerDetail } from './CustomerCard';
 import { Loading } from '../UI/Loading';
-import { ErrorBox } from '../UI/ErrorBox';
+import { ErrorBox } from '../UI/ErrorBox/index';
+import { CustomButton } from '../UI/CustomButton/Index';
 
 export const Dashboard: React.FC = () => {
     const [topAtRisk, setTopAtRisk] = useState<Customer[]>([]);
@@ -16,7 +17,7 @@ export const Dashboard: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [showAll, setShowAll] = useState(false);
 
-    useEffect(() => {
+    const getData = useCallback(() => {
         setLoading(true);
         setError(null);
         fetchDashboardData()
@@ -25,7 +26,11 @@ export const Dashboard: React.FC = () => {
                 setError(err.message || "Failed to load dashboard data");
                 setLoading(false);
             }).finally(() => setLoading(false));
-    }, []);
+    }, [])
+
+    useEffect(() => {
+        getData();
+    }, [getData]);
 
     const handleSplitToArrays = (body: { topAtRisk: Customer[], summary: DashboardSummary }) => {
         setTopAtRisk(body.topAtRisk || [])
@@ -38,12 +43,12 @@ export const Dashboard: React.FC = () => {
         setSelectedCustomerId(id);
     };
 
-    if(loading){
+    if (loading) {
         return <Loading />;
     }
-    // if(error){
-    //     return <ErrorBox error={error} tryAgain={} />;
-    // }
+    if (error) {
+        return <ErrorBox error={error} tryAgain={getData} />;
+    }
 
     if (selectedCustomerId) {
         return <CustomerDetail customerId={selectedCustomerId} onBack={() => setSelectedCustomerId(null)} />;
@@ -57,7 +62,7 @@ export const Dashboard: React.FC = () => {
         <div style={{ padding: 20 }}>
             <h1>Customer Health Dashboard</h1>
             <TopAtRisk topCustomers={topAtRisk} onSelectCustomer={handleSelectCustomer} />
-            <button onClick={() => setShowAll(true)}>View All Customers</button>
+            <CustomButton onClickFunc={() => setShowAll(true)} text={"View All Customers"} />
             <HealthPieChart summary={summary} />
         </div>
     );

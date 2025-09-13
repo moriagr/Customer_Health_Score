@@ -1,0 +1,33 @@
+.errorBox {
+    background: #ffe5e5;
+    border: 1px solid #ff4d4d;
+    color: #a60000;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+}
+
+.tryAgain {
+    background: #ff4d4d;
+    margin-right: 30px;
+}
+
+.goBack {
+    background: #594dff;
+}
+
+.retry {
+    background: #ff4d4d;
+}

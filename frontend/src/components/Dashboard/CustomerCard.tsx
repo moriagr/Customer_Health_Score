@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { fetchCurrentCustomers } from '../../services/api';
-import { CurrCustomerDetail, CustomerDetail as CustomerDetailType } from '../../types/customer';
+import { CurrCustomerDetail } from '../../types/customer';
 import { Card } from '../UI/Card';
-import { Loading } from '../UI/Loading';
-import { ErrorBox } from '../UI/ErrorBox';
 import { EmptyDataMessage } from '../UI/EmptyDataMessage';
+import { DataStateHandler } from '../Layout/DataStateHandler';
 
 interface Props {
     customerId: number;
@@ -16,11 +15,10 @@ export const CustomerDetail: React.FC<Props> = ({ customerId, onBack }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        getData();
-    }, [customerId]);
 
-    function getData() {
+    const getData = useCallback(() => {
+        setLoading(true);
+        setError(null);
         fetchCurrentCustomers(customerId)
             .then((data) => {
                 setCustomer(data);
@@ -28,30 +26,31 @@ export const CustomerDetail: React.FC<Props> = ({ customerId, onBack }) => {
             })
             .catch((err) => {
                 console.error(err.message);
-                setError('Failed to load customer details.');
+                setError(err.message || 'Failed to load customer details.');
                 setLoading(false);
             });
-    }
+    }, [customerId])
+
+    useEffect(() => {
+        getData();
+    }, [getData]);
+
+
     function printDate(date: Date | null): string {
         return (date ? JSON.stringify(date) : "N/A");
     }
 
-    if (loading) return <Loading />;
-    if (error) return <ErrorBox error={error} goBack={onBack} tryAgain={getData} />;
-    if (!customer) return <EmptyDataMessage />;
-
-    console.log('✌️customer --->', customer);
+    // if (!customer) return <EmptyDataMessage />;
     return (
-        <div style={{ padding: 20 }}>
-            <button onClick={onBack}>Back</button>
-            <h2>{JSON.stringify(customer.customerName)}</h2>
-            <p>Segment: {JSON.stringify(customer.customerSegment)}</p>
-            <p>Health Score: {JSON.stringify(customer.score) ?? 'N/A'}{customer.score ? '%' : ''}</p>
+        <DataStateHandler loading={loading} error={error} goBack={onBack} tryAgain={getData} isEmpty={!customer} emptyMessage="No customer data available.">
+            <h2>{JSON.stringify(customer?.customerName)}</h2>
+            <p>Segment: {JSON.stringify(customer?.customerSegment)}</p>
+            <p>Health Score: {JSON.stringify(customer?.score) ?? 'N/A'}{customer?.score ? '%' : ''}</p>
 
             {/* Events */}
             <h3>Events</h3>
-            {customer.events && customer.events.length > 0 ? (
-                customer.events.map((event, idx) => {
+            {customer?.events && customer?.events.length > 0 ? (
+                customer?.events.map((event, idx) => {
                     return <Card key={idx} style={{ marginBottom: 10 }}>
                         <p><strong>Event:</strong> {event.event_type}</p>
                         <p><strong>Date:</strong> {printDate(event.created_at)}</p>
@@ -64,8 +63,8 @@ export const CustomerDetail: React.FC<Props> = ({ customerId, onBack }) => {
 
             {/* Tickets */}
             <h3>Tickets</h3>
-            {customer.tickets && customer.tickets.length > 0 ? (
-                customer.tickets.map((ticket) => (
+            {customer?.tickets && customer?.tickets.length > 0 ? (
+                customer?.tickets.map((ticket) => (
                     <Card key={ticket.id} style={{ marginBottom: 10 }}>
                         <p><strong>Status:</strong> {ticket.status}</p>
                         <p><strong>Priority:</strong> {ticket.priority}</p>
@@ -79,8 +78,8 @@ export const CustomerDetail: React.FC<Props> = ({ customerId, onBack }) => {
 
             {/* Invoices */}
             <h3>Invoices</h3>
-            {customer.invoices && customer.invoices.length > 0 ? (
-                customer.invoices.map((invoice) => (
+            {customer?.invoices && customer?.invoices.length > 0 ? (
+                customer?.invoices.map((invoice) => (
                     <Card key={invoice.id} style={{ marginBottom: 10 }}>
                         <p><strong>Amount:</strong> ${invoice.amount}</p>
                         <p><strong>Status:</strong> {invoice.status}</p>
@@ -91,6 +90,6 @@ export const CustomerDetail: React.FC<Props> = ({ customerId, onBack }) => {
             ) : (
                 <p>No invoices.</p>
             )}
-        </div>
-    );
+        </DataStateHandler>
+    )
 };

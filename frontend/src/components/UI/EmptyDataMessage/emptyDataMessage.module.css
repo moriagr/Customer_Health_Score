@@ -1,0 +1,14 @@
+.emptyDataMessage {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40;
+  border: 2px dashed #ccc;
+  border-radius: 12;
+  background-color: #f9f9f9;
+  color: #555;
+  font-size: 16;
+  margin: 20;
+}
