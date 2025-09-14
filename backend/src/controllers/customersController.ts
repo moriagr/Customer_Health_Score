@@ -1,4 +1,4 @@
-const { calcFeatureAdoptionScore, calcLoginAndApiScore, calcPaymentScore, calculateDetailed, calcSupportScore, calculate, categorize } = require("../services/healthScoreService");
+const { calcLoginAndApiScore, calcPaymentScore, calculateDetailed, calcSupportScore, calculate, categorize } = require("../services/healthScoreService");
 
 const customerModel = require('../models/customerModel');
 import { customerMapType, CustomerRow, partCustomer } from '../type/healthScoreType';
@@ -67,10 +67,10 @@ async function getCustomers() {
                     segment: row.segment,
                     loginsCurrent: 0,
                     loginsPrev: 0,
-
+                    total_features: row.total_features || 0,
                     featuresCurrent: 0,
                     featuresPrev: 0,
-
+                    pendingTickets:0,
                     openTickets: 0,
                     mediumTickets: 0,
                     highTickets: 0,
@@ -107,6 +107,8 @@ async function getCustomers() {
                     }
                 } else if (row.ticket_status === "closed") {
                     customer.closedTickets += 1;
+                } else if (row.ticket_status === "pending") {
+                    customer.pendingTickets += 1;
                 }
             }
 
@@ -124,10 +126,10 @@ async function getCustomers() {
 
         customersMap.forEach((data, id) => {
             const loginScore = calcLoginAndApiScore(data.loginsCurrent, data.loginsPrev);
-            const featureScore = calcFeatureAdoptionScore(data.featuresCurrent, data.featuresPrev);
-            const supportScore = calcSupportScore(data.highTickets, data.openTickets, data.mediumTickets);
+            const featureScore = calcLoginAndApiScore(data.featuresCurrent, data.featuresPrev);
+            const supportScore = calcSupportScore(data.highTickets, data.openTickets, data.mediumTickets, data.closedTickets, data.pendingTickets);
             const apiScore = calcLoginAndApiScore(data.apiCurrent, data.apiPrev);
-            const paymentScore = calcPaymentScore(data.invoices);
+            const paymentScore = calcPaymentScore(data.invoices).score;
 
             const healthScore = calculate({
                 featureScore, loginScore, supportScore, paymentScore, apiScore
@@ -150,7 +152,7 @@ async function getCustomers() {
     }
 }
 
-async function getAllCustomers(req: Request, res: Response) {
+export async function getAllCustomers(req: Request, res: Response) {
     try {
         const customersWithHealth = await getCustomers();
 
@@ -164,7 +166,7 @@ async function getAllCustomers(req: Request, res: Response) {
     }
 }
 
-async function getCustomerHealth(req: Request, res: Response) {
+export async function getCustomerHealth(req: Request, res: Response) {
     try {
         const customer = await customerModel.getById(req.params.id);
         if (!customer) return res.status(404).json({ error: 'Customer not found' });
@@ -180,7 +182,7 @@ async function getCustomerHealth(req: Request, res: Response) {
     }
 }
 
-async function recordEvent(req: Request, res: Response) {
+export async function recordEvent(req: Request, res: Response) {
     try {
         const { options } = req.body;
         await customerModel.addRecord(req.params.id, options);

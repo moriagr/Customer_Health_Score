@@ -12,7 +12,9 @@ interface Props {
 
 export const TopAtRisk: React.FC<Props> = ({ topCustomers, onSelectCustomer }) => {
 
-    return (
+    return (<>
+            <h3>Top 5 Most At Risk Customers:</h3>
+
         <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', marginBottom: 40, justifyContent: 'center' }}>
             {topCustomers.length > 0 ? topCustomers.map(c => (
                 <Card key={c.id} style={{ cursor: 'pointer', width: 220 }} onClick={() => onSelectCustomer(c.id)}>
@@ -20,7 +22,8 @@ export const TopAtRisk: React.FC<Props> = ({ topCustomers, onSelectCustomer }) =
                     {c.score}
                     <ProgressBar value={Number(c.score)} color={COLORS[categorizeCustomer(c.score)]} />
                 </Card>
-            )): null}
+            )) : null}
         </div>
+    </>
     );
 };

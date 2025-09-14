@@ -4,6 +4,8 @@ export type Invoice = { amount: number; due_date: Date; paid_date: Date | null; 
 export type CustomerRow = {
     customer_id: number;
     customer_name: string;
+    total_features: number;
+    // pendingTickets: number;
 
     segment: string;
 
@@ -27,6 +29,8 @@ export type CustomerRow = {
 export type customerMapType = {
     loginsCurrent: number;
     loginsPrev: number;
+    total_features: number;
+    pendingTickets: number;
 
     featuresCurrent: number;
     featuresPrev: number;
@@ -51,4 +55,32 @@ export type partCustomer = {
     invoices: Invoice[];
     name: string;
     segment: string
+}
+
+
+export type typeCalculate = {
+    featureScore: number;
+    loginScore: number;
+    supportScore: number;
+    paymentScore: number;
+    apiScore: number;
+}
+
+export interface Customer {
+    customer_id: string;
+    customer_name: string;
+    segment: string;
+    total_features?: number;
+    events: Array<{
+        created_at: string;
+        event_type: string;
+    }>;
+    invoices: Array<{
+        due_date: string;
+        paid_date?: string;
+    }>;
+    tickets: Array<{
+        status: string;
+        priority: string;
+    }>;
 }

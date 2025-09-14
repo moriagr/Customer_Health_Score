@@ -37,6 +37,7 @@ services:
     ports:
       - "3000:3000"
     depends_on:
+      - seeder
       - backend
     develop:
       watch:
@@ -67,17 +68,26 @@ services:
   
   # seeder:
   #   build: ./backend
-  #   command: sh -c "npm install && node /backend/db/generateData.js"
+  #   command: node /usr/src/generate_data.js
   #   volumes:
-  #     - ./backend:/usr/db
+  #     - ./backend:/usr/src
   #   depends_on:
   #     - db
-  #   environment:
-  #     - DB_USER=postgres
-  #     - DB_PASS=postgres
-  #     - DB_HOST=db
-  #     - DB_PORT=5432
-  #     - DB_NAME=customer_health
+
+  seeder:
+    build: ./backend
+    command: sh -c "npm install && npx ts-node ./src/generateData.ts"
+    # volumes:
+    #   - ./backend:/usr/src
+    depends_on:
+      - db
+      - backend
+    environment:
+      - DB_USER=postgres
+      - DB_PASS=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=customer_health
 
 volumes:
   db-data:

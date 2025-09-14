@@ -1,9 +1,11 @@
-const pool = require('../config/db');
+// const pool = require('../config/db');
+import pool from '../config/db'
 
 async function getAll() {
   const res = await pool.query('SELECT ' +
     "c.id AS customer_id, " +
     "c.name AS customer_name, " +
+    "c.total_features AS total_features, " +
     "s.name AS segment, " +
 
     "e.id AS event_id, " +
@@ -37,6 +39,7 @@ async function getById(id: number) {
   const res = await pool.query('SELECT ' +
     "c.id AS customer_id, " +
     "c.name AS customer_name, " +
+    "c.total_features AS total_features, " +
     "s.name AS segment, " +
 
     "COALESCE(" +

@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import { getAllCustomers, getCustomerHealth, recordEvent } from '../controllers/customersController';
+
 const router = express.Router();
-const { getAllCustomers, getCustomerHealth, recordEvent } = require('../controllers/customersController.ts');
 
 // GET /api/customers
 router.get('/', getAllCustomers);
@@ -10,5 +11,5 @@ router.get('/:id/health', getCustomerHealth);
 
 // POST /api/customers/:id/events
 router.post('/:id/events', recordEvent);
-
+export default router;
 module.exports = router;

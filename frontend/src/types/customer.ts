@@ -38,9 +38,47 @@ export interface CurrEvent {
     event_data: any;
 };
 
+
+export type PieData = {
+    name: string;
+    value: number;
+    percentage: string;
+};
+
 export interface CurrCustomerDetail extends Customer {
     customerName: string;
     customerSegment: string;
+    scores: any;
+    featureCount: number;
+
+    invoicePayment?: {
+        onTime: number,
+        unpaid: number,
+        late: number,
+        total: number,
+    };
+    total_features: number;
+    // currentMonth: { loginsCurrent, featuresCurrent, apiCurrent },
+    // lastMonth: { loginsPrev, featuresPrev, apiPrev },
+    ticketsData?: {
+        openTickets: number,
+        mediumTickets: number,
+        highTickets: number,
+        closedTickets: number,
+        pendingTickets: number
+    }
+    // score: { total: number, feature: number, login: number, support: number, payment: number, api: number };
+    lastMonth?: {
+        logins: number;
+        features: number;
+        apiCalls: number;
+    };
+    currentMonth?: {
+        logins: number;
+        features: number;
+        apiCalls: number;
+    };
+
     invoices: Invoice[];
     tickets: Ticket[];
     events: CurrEvent[];

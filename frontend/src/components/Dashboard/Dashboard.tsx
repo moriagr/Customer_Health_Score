@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { fetchDashboardData } from '../../services/api';
-import { Customer, DashboardSummary } from '../../types/customer';
+import { Customer, DashboardSummary, PieData } from '../../types/customer';
 import { TopAtRisk } from './TopAtRisk';
-import { HealthPieChart } from './HealthPieChart';
+import { GenericPieChart } from './HealthPieChart';
 import { CustomerList } from './CustomerTable';
-import { CustomerDetail } from './CustomerCard';
+import { CustomerDetail } from './CustomerDetail';
 import { Loading } from '../UI/Loading';
 import { ErrorBox } from '../UI/ErrorBox/index';
 import { CustomButton } from '../UI/CustomButton/Index';
+import { HealthCategory } from '../../utils/healthUtils';
+import { COLORS } from '../../utils/colors';
 
 export const Dashboard: React.FC = () => {
     const [topAtRisk, setTopAtRisk] = useState<Customer[]>([]);
@@ -57,13 +59,25 @@ export const Dashboard: React.FC = () => {
     if (showAll) {
         return <CustomerList onSelectCustomer={handleSelectCustomer} onBack={() => setShowAll(false)} />;
     }
+    let data: PieData[] = [];
 
+    if (summary) {
+        const { total_customers, ...categoryCounts } = summary;
+        const total = total_customers || 0;
+
+
+        data = (Object.keys(categoryCounts) as HealthCategory[]).map((cat) => ({
+            name: cat,
+            value: categoryCounts[cat],
+            percentage: total ? ((categoryCounts[cat] / total) * 100).toFixed(1) : "0",
+        }));
+    }
     return (
         <div style={{ padding: 20 }}>
             <h1>Customer Health Dashboard</h1>
             <TopAtRisk topCustomers={topAtRisk} onSelectCustomer={handleSelectCustomer} />
             <CustomButton onClickFunc={() => setShowAll(true)} text={"View All Customers"} />
-            <HealthPieChart summary={summary} />
+            {data ? <GenericPieChart total={summary?.total_customers} data={data} text="Customer Health" colors={COLORS} /> : <></>}
         </div>
     );
 };

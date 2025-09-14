@@ -6,33 +6,29 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from "recharts";
-import { DashboardSummary } from "../../types/customer";
-import { HealthCategory } from "../../utils/healthUtils";
-import { COLORS } from "../../utils/colors";
 
-interface Props {
-    summary: DashboardSummary | undefined;
-}
-
-type PieData = {
+export interface PieChartItem {
     name: string;
     value: number;
-    percentage: string;
-};
+}
 
+interface Props {
+    data: PieChartItem[];               // data to display
+    colors: Record<string, string>;     // color mapping for each slice
+    total?: number;                     // optional total for percentage calculation
+    text: string;                       // title/legend header
+}
 
-export const HealthPieChart: React.FC<Props> = ({ summary }) => {
-    // Count customers by category
-    if (!summary) {
-        return <div>No data available</div>
+export const GenericPieChart: React.FC<Props> = ({ data, colors, total, text }) => {
+    if (!data || data.length === 0) {
+        return <div>No data available</div>;
     }
-    const { total_customers, ...categoryCounts } = summary;
-    const total = total_customers || 0;
 
-    const data: PieData[] = (Object.keys(categoryCounts) as HealthCategory[]).map((cat) => ({
-        name: cat,
-        value: categoryCounts[cat],
-        percentage: total ? ((categoryCounts[cat] / total) * 100).toFixed(1) : "0",
+    const computedTotal = total || data.reduce((acc, item) => acc + item.value, 0);
+
+    const dataWithPercentages = data.map((item) => ({
+        ...item,
+        percentage: ((item.value / computedTotal) * 100).toFixed(1),
     }));
 
     const renderLabel = (props: { percent: number }) =>
@@ -44,33 +40,33 @@ export const HealthPieChart: React.FC<Props> = ({ summary }) => {
             <ResponsiveContainer width="70%" height="100%">
                 <PieChart>
                     <Pie
-                        data={data}
+                        data={dataWithPercentages}
                         dataKey="value"
                         cx="50%"
                         cy="50%"
                         outerRadius={120}
-                        label={renderLabel as any} // 👈 cast avoids TS error, safe for Recharts
+                        label={renderLabel as any} // Recharts type workaround
                     >
-                        {data.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[entry.name as HealthCategory]} />
+                        {dataWithPercentages.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={colors[entry.name]} />
                         ))}
                     </Pie>
                     <Tooltip formatter={(value, _, props) => [`${value}`, props?.payload?.name]} />
                 </PieChart>
             </ResponsiveContainer>
 
-            {/* Legend menu on the side */}
-            <div style={{ width: "30%", paddingLeft: 16 }}>
-                <h4>Customer Health</h4>
+            {/* Legend */}
+            <div style={{ width: "30%", paddingLeft: 16, justifyContent: 'center', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                <h4>{text}</h4>
                 <ul style={{ listStyle: "none", padding: 0 }}>
-                    {data.map((entry) => (
+                    {dataWithPercentages.map((entry) => (
                         <li key={entry.name} style={{ marginBottom: 8 }}>
                             <span
                                 style={{
                                     display: "inline-block",
                                     width: 12,
                                     height: 12,
-                                    backgroundColor: COLORS[entry.name as HealthCategory],
+                                    backgroundColor: colors[entry.name],
                                     marginRight: 8,
                                 }}
                             />
