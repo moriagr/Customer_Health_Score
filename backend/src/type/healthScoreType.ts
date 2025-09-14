@@ -1,30 +1,36 @@
 
-export type Invoice = { amount: number; due_date: Date; paid_date: Date | null; status: string };
+export type Invoice = {
+    amount: number;
+    due_date: Date;
+    paid_date: Date | null;
+    status: string
+};
 
-export type CustomerRow = {
+export interface Customer {
     customer_id: number;
     customer_name: string;
-    total_features: number;
-    // pendingTickets: number;
-
     segment: string;
+    total_features?: number;
+    events: currEvent[];
+    invoices: Invoice[];
+    tickets: Ticket[];
+}
 
-    event_id: number | null;
-    event_type: string | null;
-    event_created_at: Date;
 
-    ticket_id: number | null;
-    ticket_status: string | null;
-    ticket_priority: string | null;
-    ticket_created_at: Date | null;
-    ticket_resolved_at: Date | null;
+export type currEvent = {
+    created_at: Date;
+    event_type: string;
+    event_data?: string;
+    id: number;
+}
 
-    invoice_id: number | null;
-    invoice_amount: number | null;
-    invoice_due_date: Date | null;
-    invoice_paid_date: Date | null;
-    invoice_status: string | null;
-};
+export type Ticket = {
+    id: number;
+    created_at: Date;
+    resolved_at?: Date | null;
+    status: string;
+    priority: string;
+}
 
 export type customerMapType = {
     loginsCurrent: number;
@@ -66,21 +72,3 @@ export type typeCalculate = {
     apiScore: number;
 }
 
-export interface Customer {
-    customer_id: string;
-    customer_name: string;
-    segment: string;
-    total_features?: number;
-    events: Array<{
-        created_at: string;
-        event_type: string;
-    }>;
-    invoices: Array<{
-        due_date: string;
-        paid_date?: string;
-    }>;
-    tickets: Array<{
-        status: string;
-        priority: string;
-    }>;
-}

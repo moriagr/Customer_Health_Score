@@ -1,16 +1,18 @@
-const { calcLoginAndApiScore, calcPaymentScore, calculateDetailed, calcSupportScore, calculate, categorize } = require("../services/healthScoreService");
+// const { calcLoginAndApiScore, convertIntoCurrentAndPrev, separateSupportTickets, calcPaymentScore, calculateDetailed, calcSupportScore, calculate, categorize } = require("../services/healthScoreService");
 
 const customerModel = require('../models/customerModel');
-import { customerMapType, CustomerRow, partCustomer } from '../type/healthScoreType';
+import { calcScore, convertIntoCurrentAndPrev, separateSupportTickets, calcSupportScore, calculate, calcPaymentScore, categorize, calculateDetailed } from '../services/healthScore';
+import { Customer, partCustomer } from '../type/healthScoreType';
 import { Request, Response } from 'express';
 
-async function getAllCustomersWithHealth(req: Request, res: Response) {
+export async function getAllCustomersWithHealth(req: Request, res: Response) {
     try {
         // Reuse the same service as /api/customers
         const customers = await getCustomers();
+console.log('✌️customers --->', customers);
 
         if (!customers || customers.length === 0) {
-            return res.json({ message: "No customers found" });
+            return res.status(404).json({ message: "No customers found" });
         }
 
         // Sort by health score ascending (lowest = at risk)
@@ -47,96 +49,31 @@ async function getAllCustomersWithHealth(req: Request, res: Response) {
 }
 
 
-
-async function getCustomers() {
+export async function getCustomers() {
     try {
         const allCustomers = await customerModel.getAll();
         // Group rows by customer
-        const customersMap = new Map<number, customerMapType>();
-
-        const now = new Date();
-        const oneMonthAgo = new Date(now);
-        oneMonthAgo.setMonth(now.getMonth() - 1);
-        const twoMonthsAgo = new Date(now);
-        twoMonthsAgo.setMonth(now.getMonth() - 2);
-
-        allCustomers.forEach((row: CustomerRow) => {
-            if (!customersMap.has(row.customer_id)) {
-                customersMap.set(row.customer_id, {
-                    name: row.customer_name,
-                    segment: row.segment,
-                    loginsCurrent: 0,
-                    loginsPrev: 0,
-                    total_features: row.total_features || 0,
-                    featuresCurrent: 0,
-                    featuresPrev: 0,
-                    pendingTickets:0,
-                    openTickets: 0,
-                    mediumTickets: 0,
-                    highTickets: 0,
-                    closedTickets: 0,
-
-                    apiCurrent: 0,
-                    apiPrev: 0,
-
-                    invoices: [],
-                });
-            }
-            const customer = customersMap.get(row.customer_id)!;
-
-            if (row.event_id) {
-                if (row.event_type === "login") {
-                    if (row.event_created_at >= oneMonthAgo) customer.loginsCurrent += 1;
-                    else if (row.event_created_at >= twoMonthsAgo) customer.loginsPrev += 1;
-                } else if (row.event_type === "feature_use") {
-                    if (row.event_created_at >= oneMonthAgo) customer.featuresCurrent += 1;
-                    else if (row.event_created_at >= twoMonthsAgo) customer.featuresPrev += 1;
-                } else if (row.event_type === "api_call") {
-                    if (row.event_created_at >= oneMonthAgo) customer.apiCurrent += 1;
-                    else if (row.event_created_at >= twoMonthsAgo) customer.apiPrev += 1;
-                }
-            }
-            if (row.ticket_id) {
-                if (row.ticket_status === "open") {
-                    if (row.ticket_priority === "high") {
-                        customer.highTickets += 1;
-                    } else if (row.ticket_priority === "medium") {
-                        customer.mediumTickets += 1;
-                    } else {
-                        customer.openTickets += 1;
-                    }
-                } else if (row.ticket_status === "closed") {
-                    customer.closedTickets += 1;
-                } else if (row.ticket_status === "pending") {
-                    customer.pendingTickets += 1;
-                }
-            }
-
-            if (row.invoice_id) {
-                customer.invoices.push({
-                    amount: row.invoice_amount!,
-                    due_date: row.invoice_due_date!,
-                    paid_date: row.invoice_paid_date,
-                    status: row.invoice_status!
-                });
-            }
-        });
+        if (!allCustomers || allCustomers.length === 0) {
+            return [];
+        }
 
         const result: any = [];
 
-        customersMap.forEach((data, id) => {
-            const loginScore = calcLoginAndApiScore(data.loginsCurrent, data.loginsPrev);
-            const featureScore = calcLoginAndApiScore(data.featuresCurrent, data.featuresPrev);
-            const supportScore = calcSupportScore(data.highTickets, data.openTickets, data.mediumTickets, data.closedTickets, data.pendingTickets);
-            const apiScore = calcLoginAndApiScore(data.apiCurrent, data.apiPrev);
+        allCustomers.forEach((data: Customer) => {
+            const { loginsPrev, loginsCurrent, featuresPrev, featuresCurrent, apiCurrent, apiPrev } = convertIntoCurrentAndPrev(data.events);
+            const { highTickets, mediumTickets, openTickets, closedTickets, pendingTickets } = separateSupportTickets(data.tickets);
+            const loginScore = calcScore(loginsCurrent, loginsPrev);
+            const featureScore = calcScore(featuresCurrent, featuresPrev);
+            const supportScore = calcSupportScore(highTickets, openTickets, mediumTickets, closedTickets, pendingTickets);
+            const apiScore = calcScore(apiCurrent, apiPrev);
             const paymentScore = calcPaymentScore(data.invoices).score;
 
             const healthScore = calculate({
                 featureScore, loginScore, supportScore, paymentScore, apiScore
             });
             result.push({
-                id: id,
-                name: data.name,
+                id: data.customer_id,
+                name: data.customer_name,
                 segment: data.segment,
                 score: healthScore.total,
                 category: categorize(healthScore.total),
@@ -155,7 +92,9 @@ async function getCustomers() {
 export async function getAllCustomers(req: Request, res: Response) {
     try {
         const customersWithHealth = await getCustomers();
-
+        if (!customersWithHealth || customersWithHealth.length === 0) {
+            return res.status(404).json({ error: "No customers found" });
+        }
         res.json(customersWithHealth);
     } catch (err) {
         if (err instanceof Error) {
@@ -196,4 +135,4 @@ export async function recordEvent(req: Request, res: Response) {
     }
 }
 
-module.exports = { getAllCustomers, getCustomerHealth, recordEvent, getAllCustomersWithHealth };
+module.exports = { getAllCustomers, getCustomers, getCustomerHealth, recordEvent, getAllCustomersWithHealth };

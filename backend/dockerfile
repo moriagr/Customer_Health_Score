@@ -15,5 +15,5 @@ COPY . .
 EXPOSE 3000
 
 # Run app
-# RUN npm run test
+RUN npm run test
 CMD ["npm", "run", "start"]

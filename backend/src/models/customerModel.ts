@@ -1,41 +1,32 @@
 // const pool = require('../config/db');
 import pool from '../config/db'
 
-async function getAll() {
-  const res = await pool.query('SELECT ' +
-    "c.id AS customer_id, " +
-    "c.name AS customer_name, " +
-    "c.total_features AS total_features, " +
-    "s.name AS segment, " +
-
-    "e.id AS event_id, " +
-    'e.event_type AS event_type, ' +
-    'e.created_at AS event_created_at, ' +
-
-    't.id AS ticket_id, ' +
-    't.status AS ticket_status, ' +
-    't.priority AS ticket_priority, ' +
-    't.created_at AS ticket_created_at, ' +
-    't.resolved_at AS ticket_resolved_at, ' +
-
-    'i.id AS invoice_id, ' +
-    'i.amount AS invoice_amount, ' +
-    'i.due_date AS invoice_due_date, ' +
-    'i.paid_date AS invoice_paid_date, ' +
-    'i.status AS invoice_status ' +
-
-    'FROM customers c ' +
-    'LEFT JOIN segments s ON c.segment_id = s.id ' +
-    'LEFT JOIN customer_events e ON c.id = e.customer_id ' +
-    'LEFT JOIN support_tickets t ON c.id = t.customer_id ' +
-    'LEFT JOIN invoices i ON c.id = i.customer_id ' +
-    'ORDER BY c.id;');
+export async function getAll() {
+  const res = await pool.query(`
+    SELECT 
+      c.id AS customer_id,
+      c.name AS customer_name,
+      c.total_features,
+      s.name AS segment,
+      COALESCE(
+        (SELECT json_agg(e) FROM customer_events e WHERE e.customer_id = c.id), '[]'
+      ) AS events,
+      COALESCE(
+        (SELECT json_agg(t) FROM support_tickets t WHERE t.customer_id = c.id), '[]'
+      ) AS tickets,
+      COALESCE(
+        (SELECT json_agg(i) FROM invoices i WHERE i.customer_id = c.id), '[]'
+      ) AS invoices
+    FROM customers c
+    LEFT JOIN segments s ON c.segment_id = s.id
+    ORDER BY c.id;
+  `);
 
 
   return res.rows;
 }
 
-async function getById(id: number) {
+export async function getById(id: number) {
   const res = await pool.query('SELECT ' +
     "c.id AS customer_id, " +
     "c.name AS customer_name, " +
@@ -67,7 +58,7 @@ async function getById(id: number) {
   return res.rows[0];
 }
 
-async function addRecord(
+export async function addRecord(
   customerId: number,
   options: {
     eventType?: string;
@@ -117,4 +108,4 @@ async function addRecord(
 }
 
 
-module.exports = { getAll, getById, addRecord };
+// module.exports = { getAll, getById, addRecord };

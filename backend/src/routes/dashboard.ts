@@ -4,5 +4,6 @@ const { getAllCustomersWithHealth } = require('../controllers/customersControlle
 
 // GET /api/dashboard
 router.get('/', getAllCustomersWithHealth);
+export default router;
 
 module.exports = router;

@@ -1,14 +1,24 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES2020",
     "module": "commonjs",
     "outDir": "./dist",
+    "types": [
+      "node",
+      "jest"
+    ],
     "rootDir": ".",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src", "generateData.ts"],
-  "exclude": ["node_modules", "**/*.test.ts"]
+  "include": [
+    "src",
+    "generateData.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    // "**/*.test.ts"
+  ]
 }
