@@ -15,7 +15,7 @@ export const ErrorBox: React.FC<ErrorBoxProps> = ({ error, goBack, tryAgain }) =
             {tryAgain || goBack ? (
                 <div>
                     {tryAgain && (
-                        <button onClick={tryAgain} className={`${styles.button} ${styles.tryAgain}`}>
+                        <button onClick={tryAgain} className={`${styles.button} ${styles.tryAgain}`} style={!goBack ? { marginRight: 0 } : {}}>
                             Try Again
                         </button>
                     )}

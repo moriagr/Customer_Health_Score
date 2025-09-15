@@ -43,15 +43,21 @@ cd customer-health-dashboard
 
 ### 2. Environment Variables
 
-Create `.env` files for backend and frontend. Example for backend:
+Create `.env` files for backend and frontend. 
+Example for backend:
 
 ```ini
-DB_USER=postgres
-DB_PASS=postgres
-DB_HOST=db
-DB_PORT=5432
-DB_NAME=customer_health
-PORT=8000
+    DB_USER=postgres
+    DB_PASS=postgres
+    DB_HOST=db
+    DB_PORT=5432
+    DB_NAME=customer_health
+    PORT=8000
+
+```
+Example for frontend:
+```ini
+    REACT_APP_API_URL=http://localhost:8000/api
 
 ```
 ---
@@ -60,7 +66,7 @@ PORT=8000
 Make sure you have Docker & Docker Compose installed.
 
 ```bash
-docker-copmose up --build
+docker-compose up --build
 ```
 
 This will start:
@@ -69,7 +75,7 @@ This will start:
 - Frontend at http://localhost:3000
 - Postgres DB at localhost:5432
 ---
-## 2. Run without Docker (Recommended)
+## Run without Docker (Recommended)
 
 ### Backend
 ```bash
@@ -142,4 +148,4 @@ See [API Documentation](./documentation/API_README.md) for more details.
 ## Research Documentation
 
 The research documents the methodology behind the customer health score calculation, including metric definitions, weighting, and scoring rationale.  
-See [Research Documentation](./documentation/Research_README.md.md) for more details.
+See [Research Documentation](./documentation/Research_README.md) for more details.

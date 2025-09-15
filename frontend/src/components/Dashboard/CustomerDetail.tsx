@@ -5,6 +5,7 @@ import { Card } from '../UI/Card';
 import { DataStateHandler } from '../Layout/DataStateHandler';
 import CustomerComparisonChart from './ComparisonBarChart';
 import { GenericPieChart } from './HealthPieChart';
+import { PresentScore } from '../UI/PresentScore';
 
 interface Props {
     customerId: number;
@@ -95,11 +96,16 @@ export const CustomerDetail: React.FC<Props> = ({ customerId, onBack }) => {
         "Invoice payment on time": "#82ca9d", // green
     };
 
+    // function presentScore(score:number | null){
+    // 
+
+
+    // }
     return (
         <DataStateHandler loading={loading} error={error} goBack={onBack} tryAgain={getData} isEmpty={!customer} emptyMessage="No customer data available.">
             <h2>{JSON.stringify(customer?.customerName)}</h2>
             <p>Segment: {JSON.stringify(customer?.customerSegment)}</p>
-            <p>Health Score: {JSON.stringify(customer?.score) ?? 'N/A'}{customer?.score ? '%' : ''}</p>
+            {<PresentScore score={customer?.score} />}
             {customer && customer.lastMonth && customer.currentMonth && (
                 <CustomerComparisonChart
                     lastMonth={customer.lastMonth}
@@ -112,8 +118,8 @@ export const CustomerDetail: React.FC<Props> = ({ customerId, onBack }) => {
                 gap: 16,
             }}
             >
-                    {customer && customer.tickets.length > 0 && <GenericPieChart colors={colorsTickets} total={totalTickets} data={dataTicket} text="Support ticket volume" />}
-                    {customer && customer.invoices.length > 0 && <GenericPieChart colors={colorsInvoices} total={totalInvoices} data={dataInvoices} text="Invoice payment timeliness" />}
+                {customer && customer.tickets.length > 0 && <GenericPieChart colors={colorsTickets} total={totalTickets} data={dataTicket} text="Support ticket volume" />}
+                {customer && customer.invoices.length > 0 && <GenericPieChart colors={colorsInvoices} total={totalInvoices} data={dataInvoices} text="Invoice payment timeliness" />}
             </div>
             <h2>Detailed Health Scores:</h2>
 

@@ -1,18 +1,14 @@
-const API_BASE = 'http://localhost:8000/api';
-
 export async function fetchDashboardData(): Promise<any> {
   try {
-    const response = await fetch(`${API_BASE}/dashboard/`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/dashboard/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:8000",
-        // "Authorization": `Bearer ${yourToken}`, // if you need auth
       }, credentials: 'include',
     });
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`There is a problem receiving data, please try again later.`);
     }
     return await response.json();
   } catch (error) {
@@ -23,7 +19,7 @@ export async function fetchDashboardData(): Promise<any> {
 
 export async function fetchCustomers(): Promise<any> {
   try {
-    const response = await fetch(`${API_BASE}/customers`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/customers`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -43,7 +39,7 @@ export async function fetchCustomers(): Promise<any> {
 
 export async function fetchCurrentCustomers(id: number): Promise<any> {
   try {
-    const response = await fetch(`${API_BASE}/customers/${id}/health`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/customers/${id}/health`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -62,7 +58,7 @@ export async function fetchCurrentCustomers(id: number): Promise<any> {
 }
 export async function saveEventDetails(body: object, id: number): Promise<any> {
   try {
-    const response = await fetch(`${API_BASE}/customers/${id}/events`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/customers/${id}/events`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -37,8 +37,10 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - seeder
+      # - seeder
       - backend
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000/api
     develop:
       watch:
         - path: ./frontend
@@ -65,29 +67,21 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-  
+
   # seeder:
   #   build: ./backend
-  #   command: node /usr/src/generate_data.js
-  #   volumes:
-  #     - ./backend:/usr/src
+  #   command: sh -c "npm install && npx ts-node ./src/generateData.ts"
+  #   # volumes:
+  #   #   - ./backend:/usr/src
   #   depends_on:
   #     - db
-
-  seeder:
-    build: ./backend
-    command: sh -c "npm install && npx ts-node ./src/generateData.ts"
-    # volumes:
-    #   - ./backend:/usr/src
-    depends_on:
-      - db
-      - backend
-    environment:
-      - DB_USER=postgres
-      - DB_PASS=postgres
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_NAME=customer_health
+  #     - backend
+  #   environment:
+  #     - DB_USER=postgres
+  #     - DB_PASS=postgres
+  #     - DB_HOST=db
+  #     - DB_PORT=5432
+  #     - DB_NAME=customer_health
 
 volumes:
   db-data:

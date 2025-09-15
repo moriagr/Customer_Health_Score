@@ -42,37 +42,22 @@ CREATE TABLE invoices (
 );
 
 
--- CREATE TABLE features (
---     id SERIAL PRIMARY KEY,
---     name VARCHAR(100) NOT NULL,
---     description TEXT
--- );
+CREATE TABLE features (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT
+);
 
--- CREATE TABLE customer_features (
---     customer_id INT REFERENCES customers(id) ON DELETE CASCADE,
---     feature_id INT REFERENCES features(id) ON DELETE CASCADE,
---     first_used_at TIMESTAMP
--- );
-
--- -- Insert fixed segments
--- INSERT INTO segments (name) VALUES
--- ('Enterprise'),
--- ('startup'),
--- ('SMB')
--- ON CONFLICT DO NOTHING;
-
--- -- Insert sample events
--- INSERT INTO customer_events (customer_id, event_type, event_date) VALUES
--- (1, 'login', NOW() - INTERVAL '1 day'),
--- (1, 'feature_used', NOW() - INTERVAL '2 days'),
--- (2, 'support_ticket', NOW() - INTERVAL '5 days'),
--- (3, 'invoice_paid', NOW() - INTERVAL '10 days')
--- ON CONFLICT DO NOTHING;
+CREATE TABLE customer_features (
+    customer_id INT REFERENCES customers(id) ON DELETE CASCADE,
+    feature_id INT REFERENCES features(id) ON DELETE CASCADE,
+    first_used_at TIMESTAMP
+);
 
 
--- ============================
--- Segments
--- ============================
+-- -- ============================
+-- -- Segments
+-- -- ============================
 -- INSERT INTO segments (id, name) VALUES
 -- (1, 'Enterprise'),
 -- (2, 'SMB'),

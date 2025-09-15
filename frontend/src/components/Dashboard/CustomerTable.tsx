@@ -3,6 +3,7 @@ import { Customer } from '../../types/customer';
 import { Card } from '../UI/Card';
 import { fetchCustomers } from '../../services/api';
 import { DataStateHandler } from '../Layout/DataStateHandler';
+import { PresentScore } from '../UI/PresentScore';
 
 interface Props {
     onSelectCustomer: (id: number) => void;
@@ -37,7 +38,7 @@ export const CustomerList: React.FC<Props> = ({ onSelectCustomer, onBack }) => {
                 <Card key={c.id} style={{ margin: 10, cursor: 'pointer' }} onClick={() => onSelectCustomer(c.id)}>
                     <h4>{c.name}</h4>
                     <p>Segment: {c.segment}</p>
-                    <p>Health Score: {c.score}</p>
+                    <PresentScore score={c.score} />
                 </Card>
             ))}
         </DataStateHandler>
