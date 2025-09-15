@@ -144,7 +144,7 @@ describe('separateSupportTickets', () => {
     expect(result.pendingTickets).toBe(1);
 
     const score = calcSupportScore(result.openTickets, result.mediumTickets, result.highTickets, result.closedTickets, result.pendingTickets)
-    expect(score).toBe(70);
+    expect(score).toBe(55);
   });
 });
 

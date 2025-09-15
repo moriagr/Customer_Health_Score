@@ -11,13 +11,6 @@ interface Props {
     onBack: () => void;
 }
 
-interface pieChartData {
-    total_tickets: number;
-    Used: number;
-    Remaining: number;
-    usedFeatures: number;
-}
-
 export const CustomerDetail: React.FC<Props> = ({ customerId, onBack }) => {
     const [customer, setCustomer] = useState<CurrCustomerDetail | null>(null);
     const [loading, setLoading] = useState(true);

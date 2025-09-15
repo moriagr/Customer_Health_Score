@@ -1,7 +1,7 @@
 import { Ticket } from "../../../type/healthScoreType";
 
 export function calcSupportScore(open: number, medium: number, high: number, closed: number, pending: number): number {
-    const total = open + medium + high + closed + pending;
+    const total = open + medium + high + pending;
     if (total === 0) return 100;
 
     const weightedOpen = open * 1;

@@ -61,22 +61,31 @@ export async function getById(id: number) {
 export async function addRecord(
   customerId: number,
   options: {
-    eventType?: string;
-    event_data?: any;
+    event?: {
+      eventType: string;
+      event_data?: any;
+
+    };
     ticket?: { status: string; priority: string };
     invoice?: { amount: number; dueDate: string; status: string };
   }
 ) {
+  if (!options.event && !options.ticket && !options.invoice) {
+    // throw early before starting the transaction
+    throw new Error(
+      "No data provided. Include at least one of: event, ticket, or invoice."
+    );
+  }
+  
   try {
     await pool.query("BEGIN");
-
     // Add event
-    if (options.eventType) {
-      if (!options.event_data) options.event_data = {};
+    if (options.event) {
+      if (!options.event.event_data) options.event.event_data = {};
       await pool.query(
         `INSERT INTO customer_events (customer_id, event_type, created_at, event_data)
          VALUES ($1, $2, NOW(), $3)`,
-        [customerId, options.eventType, JSON.stringify(options.event_data)]
+        [customerId, options.event.eventType, JSON.stringify(options.event.event_data)]
       );
     }
 

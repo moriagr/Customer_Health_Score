@@ -3,6 +3,8 @@ CREATE TABLE segments (
     name VARCHAR(50) NOT NULL UNIQUE  -- Enterprise, SMB, Startup
 );
 
+CREATE TYPE event_type_enum AS ENUM ('login', 'feature_use', 'api_call');
+
 CREATE TABLE customers (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -15,7 +17,7 @@ CREATE TABLE customers (
 CREATE TABLE customer_events (
     id SERIAL PRIMARY KEY,
     customer_id INT REFERENCES customers(id) ON DELETE CASCADE,
-    event_type VARCHAR(50) NOT NULL,   -- login, feature_use, api_call
+    event_type  event_type_enum,
     event_data JSONB,                  -- extra details (feature name, endpoint, etc.)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

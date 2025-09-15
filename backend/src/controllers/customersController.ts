@@ -9,7 +9,6 @@ export async function getAllCustomersWithHealth(req: Request, res: Response) {
     try {
         // Reuse the same service as /api/customers
         const customers = await getCustomers();
-console.log('✌️customers --->', customers);
 
         if (!customers || customers.length === 0) {
             return res.status(404).json({ message: "No customers found" });
@@ -43,11 +42,13 @@ console.log('✌️customers --->', customers);
             })),
         });
     } catch (err) {
-        console.error("Error in /api/dashboard:", err);
-        res.status(500).json({ error: "Failed to load dashboard data" });
+        if (err instanceof Error) {
+            res.status(500).json({ error: err.message });
+        } else {
+            res.status(500).json({ error: "Failed to load dashboard data" });
+        }
     }
 }
-
 
 export async function getCustomers() {
     try {
@@ -128,7 +129,7 @@ export async function recordEvent(req: Request, res: Response) {
         res.status(201).json({ message: 'Event recorded' });
     } catch (err) {
         if (err instanceof Error) {
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: "Error saving customer events: " + err.message });
         } else {
             res.status(500).json({ error: "An unknown error occurred" });
         }

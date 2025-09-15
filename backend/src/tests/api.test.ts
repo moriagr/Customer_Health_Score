@@ -147,7 +147,7 @@ describe("Customer API error handling", () => {
 
         expect(res.status).toBe(500);
         expect(res.body).toHaveProperty("error");
-        expect(res.body.error).toBe("Insert failed");
+        expect(res.body.error).toBe("Error saving customer events: Insert failed");
     });
 
     test("GET /api/dashboard - handles service error", async () => {
@@ -159,27 +159,36 @@ describe("Customer API error handling", () => {
 
         expect(res.status).toBe(500);
         expect(res.body).toHaveProperty("error");
-        expect(res.body.error).toBe("Failed to load dashboard data");
+        expect(res.body.error).toBe("Error fetching customers: Dashboard service error");
     });
 
-    // it("should return 404 when no customers found", async () => {
-    //     // Mock getCustomers to return an empty array
-    //     jest.spyOn(customerController, "getCustomers" as any).mockResolvedValue([]);
+    test("GET /api/customers returns 500 on DB error", async () => {
+        (customerModel.getAll as jest.Mock).mockRejectedValue(new Error("DB connection failed"));
 
-    //     const res = await request(app).get("/api/dashboard");
+        const res = await request(app).get("/api/customers");
 
-    //     expect(res.status).toBe(404);
-    //     expect(res.body).toHaveProperty("message", "No customers found");
-    // });
+        expect(res.status).toBe(500);
+        expect(res.body).toEqual({ error: "Error fetching customers: DB connection failed" });
+    });
 
-    // it("should throw an error when customerModel.getAll fails", async () => {
-    //     // Mock getAll to throw an error
-    //     jest.spyOn(getAllCustomersWithHealth, "getAll").mockImplementation(() => {
-    //         throw new Error("Database connection failed");
-    //     });
+    test("GET /api/customers returns 500 on unknown error", async () => {
+        (customerModel.getAll as jest.Mock).mockImplementation(() => { throw "weird error"; });
 
-    //     await expect(getCustomers()).rejects.toThrow(
-    //         "Error fetching customers: Database connection failed"
-    //     );
-    // });
+        const res = await request(app).get("/api/customers");
+
+        expect(res.status).toBe(500);
+        expect(res.body).toEqual({ error: "Error fetching customers: weird error" });
+    });
+
+
+    test("GET /api/customers returns 500 if events are malformed", async () => {
+        (customerModel.getAll as jest.Mock).mockResolvedValue([
+            { customer_id: 1, customer_name: "BadCo", segment: "SMB", events: null, tickets: [], invoices: [] }
+        ]);
+
+        const res = await request(app).get("/api/customers");
+
+        expect(res.status).toBe(500);
+        expect(res.body.error).toMatch(/Error fetching customers:/);
+    });
 });
