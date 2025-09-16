@@ -1,17 +1,18 @@
 # 🧑‍💻 Customer Health Dashboard
-
+### Created by Moria Grohar, 9/2025, moriagro@gmail.com
 A full-stack application for monitoring **customer health scores** based on invoices, tickets, and product usage events.  
 The system provides insights into customer segments, health score trends, and potential risks.  
 
 ---
 
 ## 🚀 Features
+- Dashboard containing top 5 At-risk customers, list to customers list and graphical customers health distribution
 - Customer list with health scores
 - Detailed customer view (events, invoices, tickets)
 - Real-time health score calculation
-- Error & loading handling with reusable UI components
+- Error handling with clear messages
 - Designed UI components (CustomButton, ErrorBox, ProgressBar, Loading)
-- Automated testing with **80%+ coverage** for critical operations
+- Automated testing including Unit tests, Integration tests. Code coverage of **97%** 
 
 ---
 
@@ -19,12 +20,10 @@ The system provides insights into customer segments, health score trends, and po
 ### Frontend
 - React + TypeScript
 - CSS Modules for styling
-- fetch for API calls
 
 ### Backend
 - Node.js + Express
 - PostgreSQL (with init.sql for schema)
-- Health score calculation logic
 
 ### Infrastructure
 - Docker & Docker Compose
@@ -43,9 +42,9 @@ cd customer-health-dashboard
 
 ### 2. Environment Variables
 
-Create `.env` files for backend and frontend. 
+Create `.env` files for backend and frontend in the main library. 
 Example for backend:
-
+`\backend\.env`
 ```ini
     DB_USER=postgres
     DB_PASS=postgres
@@ -53,17 +52,18 @@ Example for backend:
     DB_PORT=5432
     DB_NAME=customer_health
     PORT=8000
-
 ```
 Example for frontend:
+`\frontend\.env`
+
 ```ini
     REACT_APP_API_URL=http://localhost:8000/api
 
 ```
 ---
-## Run with Docker (Recommended)
+## Run with Docker
 
-Make sure you have Docker & Docker Compose installed.
+Make sure you have Docker & Docker Compose installed https://docs.docker.com/engine/install/
 
 ```bash
 docker-compose up --build
@@ -71,13 +71,17 @@ docker-compose up --build
 
 This will start:
 
+- Postgres DB at localhost:5432
 - Backend at http://localhost:8000/api
 - Frontend at http://localhost:3000
-- Postgres DB at localhost:5432
 ---
-## Run without Docker (Recommended)
+## Run without Docker
 
-### Backend
+### 1. Database
+
+Make sure PostgreSQL is running locally and matches your `.env` credentials. Run `db/init.sql` to set up schema.
+
+### 2. Backend
 ```bash
 cd backend
 npm install
@@ -86,7 +90,7 @@ npm run dev
 
 Backend will run on: http://localhost:8000/api
 
-### Frontend
+### 3. Frontend
 ```bash
 cd frontend
 npm install
@@ -94,10 +98,6 @@ npm start
 ```
 
 Frontend will run on: http://localhost:3000
-
-### Database
-
-Make sure PostgreSQL is running locally and matches your `.env` credentials. Run `db/init.sql` to set up schema.
 
 ---
 ## Running Tests
@@ -116,11 +116,11 @@ npm test
 
 **Tests include:**
 
-* **Unit tests:** Health score calculation logic
+* **Unit tests:** Health score calculation logic 
 
 * **Integration tests:** API endpoints
 
-* **Coverage requirement:** 80%+ on critical operations
+* **Code Coverage:** 97%
 
 ---
 ## AI Collaboration Evidence

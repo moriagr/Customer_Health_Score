@@ -9,7 +9,9 @@ It helps predict **churn risk** vs. **retention strength**, guiding customer suc
 Companies measure health in multiple ways:
 - **Numeric points system** (0–100 or weighted scores)  
 - **Ranking system** (A, B, C, D)  
-- **Color coding** (Green = good, Yellow = medium, Red = at risk)  
+- **Color coding** (Green = good, Yellow = medium, Red = at risk)
+
+In the system I created I use a calculated **Numeric points system** for exact score, as well as **Color coding** for clarity and visualization.
 
 ---
 ## Key Metrics
@@ -42,17 +44,17 @@ Companies measure health in multiple ways:
 - **What it means**: Number of support requests over time.  
 - **Why it matters**:  
   - High volume = frustration, friction, possible churn  
-  - Low volume = smooth usage (but sometimes disengagement)  
+  - Low volume = smooth usage (but sometimes disengagement)
 
 - **How to measure**:  
-  - Count tickets for each category:
+  - Count tickets for each category; each category has its own weight:
     - open tickets with low priority
     - open tickets with medium priority
     - open tickets with high priority
-    - pending tickets
-  -  Calculation: 
+    - pending tickets - tickets that are being handled
+  -  Calculation of support ticket volume measure: 
   ```javascript 
-  100 - 20 * (lowTickets * 1 + mediumTickets * 2 + highTickets * 5 + pendingTickets * 1) / (lowTickets + mediumTickets + highTickets + pendingTickets) 
+  (lowTickets * 1 + mediumTickets * 2 + highTickets * 5 + pendingTickets * 1) / (lowTickets + mediumTickets + highTickets + pendingTickets) 
    ```
 
 ---
@@ -90,23 +92,10 @@ Companies measure health in multiple ways:
 
 ---
 
-## Scoring Formula
-
-```javascript
-// Core formula
-score = (metric / expected) * 100
-✅ Simple and transparent
-✅ Scales naturally
-✅ Easy to explain to stakeholders
-✅ Allows over-performance (>100 scores possible)
-```
-
-## Why This Approach?
-- Balanced, transparent, and easy to implement.
-
-- Gives clear signals for customer success teams.
-
-- Provides fairness across customer segments.
-
-- Optimized for business impact while staying actionable.
-
+## Scoring Formula:
+` totalScore =
+        featureScore * 0.30 +
+        loginScore * 0.25 +
+        supportScore * 0.20 +
+        paymentScore * 0.15 +
+        apiScore * 0.10`
