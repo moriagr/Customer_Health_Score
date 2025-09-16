@@ -5,8 +5,7 @@ import customerRoutes from "../routes/customers";
 import dashboardRoute from "../routes/dashboard";
 import * as customerModel from "../models/customerModel";
 import { mockCustomers } from "./mockData";
-import * as customerController from "../controllers/customersController";
-import { getCustomers, getAllCustomersWithHealth } from "../controllers/customersController";
+import { getAllCustomersWithHealth } from "../controllers/customersController";
 
 
 // Create Express app
@@ -43,7 +42,6 @@ describe("Customer API routes", () => {
             {
                 customer_id: 1,
                 customer_name: "Alice",
-                total_features: 5,
                 segment: "Enterprise",
                 events: [],
                 tickets: [],
@@ -52,7 +50,6 @@ describe("Customer API routes", () => {
             {
                 customer_id: 2,
                 customer_name: "Bob",
-                total_features: 3,
                 segment: "SMB",
                 events: [],
                 tickets: [],
@@ -85,6 +82,7 @@ describe("Customer API routes", () => {
         expect(res.body.invoices).toEqual([]);
         expect(res.body.scores).toBeDefined();
     });
+
 
     // POST /api/customers/:id/events -> recordEvent
     test("POST /api/customers/:id/events records an event", async () => {
@@ -191,4 +189,51 @@ describe("Customer API error handling", () => {
         expect(res.status).toBe(500);
         expect(res.body.error).toMatch(/Error fetching customers:/);
     });
+
+    test("GET /api/dashboard - returns 404 if no customers found", async () => {
+        // Mock getCustomers to return an empty array
+        (customerModel.getAll as jest.Mock).mockResolvedValue([]);
+
+        const res = await request(app).get("/api/dashboard");
+
+        expect(res.status).toBe(404);
+        expect(res.body).toEqual({ message: "No customers found" });
+
+    });
+
 });
+
+// describe("getAllCustomersWithHealth error handling", () => {
+//     test("returns 500 if getCustomers rejects with Error", async () => {
+//         // Mock getCustomers to reject
+//         jest.spyOn(require("../controllers/customersController"), "getCustomers")
+//             .mockRejectedValue(new Error("DB failure"));
+
+//         // Mock req and res
+//         const req = {} as any;
+//         const json = jest.fn();
+//         const status = jest.fn(() => ({ json }));
+//         const res = { status } as any;
+
+//         await getAllCustomersWithHealth(req, res);
+
+//         expect(status).toHaveBeenCalledWith(500);
+//         expect(json).toHaveBeenCalledWith({ error: "DB failure" });
+//     });
+
+//     test("returns 500 if getCustomers rejects with non-Error", async () => {
+//         jest.spyOn(require("../controllers/customersController"), "getCustomers")
+//             .mockRejectedValue("weird failure");
+
+//         const req = {} as any;
+//         const json = jest.fn();
+//         const status = jest.fn(() => ({ json }));
+//         const res = { status } as any;
+
+//         await getAllCustomersWithHealth(req, res);
+
+//         expect(status).toHaveBeenCalledWith(500);
+//         expect(json).toHaveBeenCalledWith({ error: "weird failure" });
+//     });
+// });
+

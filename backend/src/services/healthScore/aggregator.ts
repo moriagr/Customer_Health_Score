@@ -3,6 +3,7 @@ import { calcScore } from "./calculators/featureAdoption";
 import { convertIntoCurrentAndPrev } from "./calculators/loginAndApi";
 import { separateSupportTickets, calcSupportScore } from "./calculators/support";
 import { calcPaymentScore } from "./calculators/payments";
+import {logger} from "../../utils/logger";
 
 export function calculate({ featureScore, loginScore, supportScore, paymentScore, apiScore }: typeCalculate) {
     const total =
@@ -12,7 +13,7 @@ export function calculate({ featureScore, loginScore, supportScore, paymentScore
         paymentScore * 0.15 +
         apiScore * 0.10;
 
-    return {
+    const result = {
         featureScore,
         loginScore,
         supportScore,
@@ -20,6 +21,9 @@ export function calculate({ featureScore, loginScore, supportScore, paymentScore
         apiScore,
         total: Number(total.toFixed(1)),
     };
+
+    logger.info("Calculated overall score", result);
+    return result;
 }
 
 export function calculateCustomerScore(customer: Customer) {
@@ -40,20 +44,22 @@ export function calculateCustomerScore(customer: Customer) {
         apiScore,
     });
 
-    return {
+    const detailedResult = {
         score: scores.total,
         scores,
         currentMonth: { logins: loginsCurrent, features: featuresCurrent, apiCalls: apiCurrent },
         lastMonth: { logins: loginsPrev, features: featuresPrev, apiCalls: apiPrev },
         ticketsData: { openTickets, mediumTickets, highTickets, closedTickets, pendingTickets },
         invoicePayment: payment,
-        total_features: customer.total_features || 0,
     };
+
+    logger.info("Calculated customer score", { customerId: customer.customer_id, ...detailedResult });
+    return detailedResult;
 }
 
 export function calculateDetailed(customer: Customer) {
     const detailedScores = calculateCustomerScore(customer);
-    return {
+    const result = {
         events: customer.events,
         invoices: customer.invoices,
         tickets: customer.tickets,
@@ -62,4 +68,7 @@ export function calculateDetailed(customer: Customer) {
         id: customer.customer_id,
         ...detailedScores,
     };
+
+    logger.info("Generated detailed customer health report", { customerId: customer.customer_id });
+    return result;
 }

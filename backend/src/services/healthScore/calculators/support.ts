@@ -1,4 +1,5 @@
 import { Ticket } from "../../../type/healthScoreType";
+import {logger} from "../../../utils/logger";
 
 export function calcSupportScore(open: number, medium: number, high: number, closed: number, pending: number): number {
     const total = open + medium + high + pending;
@@ -10,6 +11,8 @@ export function calcSupportScore(open: number, medium: number, high: number, clo
     const weightedPending = pending * 1;
 
     const issueScore = (weightedOpen + weightedMedium + weightedHigh + weightedPending) / total;
+    logger.info("Calculated Support ticket score", issueScore);
+
     return Math.max(0, 100 - issueScore * 20); // scaling factor
 }
 
@@ -27,6 +30,8 @@ export function separateSupportTickets(tickets: Ticket[]) {
             pendingTickets += 1;
         }
     });
+
+    logger.info("Separated support tickets", { highTickets, mediumTickets, openTickets, closedTickets, pendingTickets });
 
     return { highTickets, mediumTickets, openTickets, closedTickets, pendingTickets };
 }

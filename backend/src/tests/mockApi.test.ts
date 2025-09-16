@@ -13,8 +13,8 @@ beforeEach(() => {
 describe("getAll", () => {
     it("returns rows from the database", async () => {
         const mockRows = [
-            { customer_id: 1, customer_name: "Alice", total_features: 5, segment: "Enterprise", events: [], tickets: [], invoices: [] },
-            { customer_id: 2, customer_name: "Bob", total_features: 3, segment: "SMB", events: [], tickets: [], invoices: [] }
+            { customer_id: 1, customer_name: "Alice", segment: "Enterprise", events: [], tickets: [], invoices: [] },
+            { customer_id: 2, customer_name: "Bob", segment: "SMB", events: [], tickets: [], invoices: [] }
         ];
 
         (pool.query as jest.Mock).mockResolvedValue({ rows: mockRows });
@@ -34,7 +34,7 @@ describe("getAll", () => {
 
 describe("getById", () => {
     it("returns a single customer", async () => {
-        const mockCustomer = { customer_id: 1, customer_name: "Alice", total_features: 5, segment: "Enterprise", events: [], tickets: [], invoices: [] };
+        const mockCustomer = { customer_id: 1, customer_name: "Alice", segment: "Enterprise", events: [], tickets: [], invoices: [] };
         (pool.query as jest.Mock).mockResolvedValue({ rows: [mockCustomer] });
 
         const result = await getById(1);
@@ -94,6 +94,16 @@ describe("addRecord", () => {
 
         expect(pool.query).toHaveBeenCalledWith("ROLLBACK");
     });
+
+    test("returns null if customer not found", async () => {
+            // Mock the database query to return no rows
+            (pool.query as jest.Mock).mockResolvedValue({ rows: [] });
+    
+            const id = 123;
+            const result = await getById(id);
+    
+            expect(result).toBeNull();
+        });
 
     it("inserts a support ticket", async () => {
         (pool.query as jest.Mock).mockResolvedValue({}); // mock all queries succeed

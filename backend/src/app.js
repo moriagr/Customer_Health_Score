@@ -5,17 +5,18 @@ const customerRoutes = require('./routes/customers');
 const dashboardRoute = require('./routes/dashboard');
 const cors = require('cors');
 const app = express();
+const morgan = require("morgan"); // <-- add this
 
-// Allow requests from your frontend
-// app.options('*', cors());
+
 app.use(cors({
-  origin: 'http://localhost:3000', // allow only your frontend
+  origin: process.env.FRONTEND_URL, // allow only your frontend
   methods: ['GET','POST'],
   credentials: true, // if you use cookies or auth
 }));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(morgan("combined")); 
 
 // Routes
 app.use('/api/customers', customerRoutes);

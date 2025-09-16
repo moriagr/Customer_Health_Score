@@ -1,9 +1,8 @@
-// const { calcLoginAndApiScore, convertIntoCurrentAndPrev, separateSupportTickets, calcPaymentScore, calculateDetailed, calcSupportScore, calculate, categorize } = require("../services/healthScoreService");
-
 const customerModel = require('../models/customerModel');
 import { calcScore, convertIntoCurrentAndPrev, separateSupportTickets, calcSupportScore, calculate, calcPaymentScore, categorize, calculateDetailed } from '../services/healthScore';
 import { Customer, partCustomer } from '../type/healthScoreType';
 import { Request, Response } from 'express';
+import {logger} from '../utils/logger';
 
 export async function getAllCustomersWithHealth(req: Request, res: Response) {
     try {
@@ -11,6 +10,7 @@ export async function getAllCustomersWithHealth(req: Request, res: Response) {
         const customers = await getCustomers();
 
         if (!customers || customers.length === 0) {
+            logger.warn("No customers found for dashboard");
             return res.status(404).json({ message: "No customers found" });
         }
 
@@ -26,6 +26,7 @@ export async function getAllCustomersWithHealth(req: Request, res: Response) {
         const mediumCount = customers.filter((c: partCustomer) => c.category === "Middle").length;
         const atRiskCount = customers.filter((c: partCustomer) => c.category === "At Risk").length;
 
+        logger.info("Fetched dashboard data", { total, healthyCount, mediumCount, atRiskCount });
         // Response payload
         res.json({
             summary: {
@@ -42,22 +43,19 @@ export async function getAllCustomersWithHealth(req: Request, res: Response) {
             })),
         });
     } catch (err) {
-        if (err instanceof Error) {
-            res.status(500).json({ error: err.message });
-        } else {
-            res.status(500).json({ error: "Failed to load dashboard data" });
-        }
+        logger.error("Error in getAllCustomersWithHealth", { error: err instanceof Error ? err.message : err });
+        res.status(500).json({ error: err instanceof Error ? err.message : "Failed to load dashboard data" });
     }
 }
 
 export async function getCustomers() {
     try {
         const allCustomers = await customerModel.getAll();
-        // Group rows by customer
+
         if (!allCustomers || allCustomers.length === 0) {
+            logger.warn("No customers returned from model.getAll()");
             return [];
         }
-
         const result: any = [];
 
         allCustomers.forEach((data: Customer) => {
@@ -80,13 +78,12 @@ export async function getCustomers() {
                 category: categorize(healthScore.total),
             })
         });
+        logger.info("Calculated health scores for customers", { count: result.length });
+
         return result;
     } catch (err) {
-        if (err instanceof Error) {
-            throw new Error(`Error fetching customers: ${err.message}`);
-        } else {
-            throw new Error(`Error fetching customers: ${String(err)}`);
-        }
+        logger.error("Error in getCustomers", { error: err instanceof Error ? err.message : String(err) });
+        throw new Error(`Error fetching customers: ${err instanceof Error ? err.message : String(err)}`);
     }
 }
 
@@ -94,31 +91,33 @@ export async function getAllCustomers(req: Request, res: Response) {
     try {
         const customersWithHealth = await getCustomers();
         if (!customersWithHealth || customersWithHealth.length === 0) {
+            logger.warn("No customers found in getAllCustomers");
             return res.status(404).json({ error: "No customers found" });
         }
+
+        logger.info("Fetched all customers with health scores", { count: customersWithHealth.length });
         res.json(customersWithHealth);
     } catch (err) {
-        if (err instanceof Error) {
-            res.status(500).json({ error: err.message });
-        } else {
-            res.status(500).json({ error: "An unknown error occurred" });
-        }
+        logger.error("Error in getAllCustomers", { error: err instanceof Error ? err.message : String(err) });
+        res.status(500).json({ error: err instanceof Error ? err.message : "An unknown error occurred" });
     }
 }
 
 export async function getCustomerHealth(req: Request, res: Response) {
     try {
         const customer = await customerModel.getById(req.params.id);
-        if (!customer) return res.status(404).json({ error: 'Customer not found' });
+        if (!customer) {
+            logger.warn("Customer not found in getCustomerHealth", { customerId: req.params.id });
+            return res.status(404).json({ error: "Customer not found" });
+        }
 
         const health = calculateDetailed(customer);
+        logger.info("Calculated detailed health for customer", { customerId: req.params.id, score: health.score });
+
         res.json(health);
     } catch (err) {
-        if (err instanceof Error) {
-            res.status(500).json({ error: err.message });
-        } else {
-            res.status(500).json({ error: "An unknown error occurred" });
-        }
+        logger.error("Error in getCustomerHealth", { customerId: req.params.id, error: err instanceof Error ? err.message : String(err) });
+        res.status(500).json({ error: err instanceof Error ? err.message : "An unknown error occurred" });
     }
 }
 
@@ -126,14 +125,10 @@ export async function recordEvent(req: Request, res: Response) {
     try {
         const { options } = req.body;
         await customerModel.addRecord(req.params.id, options);
-        res.status(201).json({ message: 'Event recorded' });
+        logger.info("Recorded customer event", { customerId: req.params.id, options });
+        res.status(201).json({ message: "Event recorded" });
     } catch (err) {
-        if (err instanceof Error) {
-            res.status(500).json({ error: "Error saving customer events: " + err.message });
-        } else {
-            res.status(500).json({ error: "An unknown error occurred" });
-        }
+        logger.error("Error recording customer event", { customerId: req.params.id, error: err instanceof Error ? err.message : err });
+        res.status(500).json({ error: "Error saving customer events: " + (err instanceof Error ? err.message : "Unknown error") });
     }
 }
-
-module.exports = { getAllCustomers, getCustomers, getCustomerHealth, recordEvent, getAllCustomersWithHealth };

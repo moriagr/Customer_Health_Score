@@ -10,7 +10,6 @@ export interface Customer {
     customer_id: number;
     customer_name: string;
     segment: string;
-    total_features?: number;
     events: currEvent[];
     invoices: Invoice[];
     tickets: Ticket[];
@@ -35,7 +34,6 @@ export type Ticket = {
 export type customerMapType = {
     loginsCurrent: number;
     loginsPrev: number;
-    total_features: number;
     pendingTickets: number;
 
     featuresCurrent: number;

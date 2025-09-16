@@ -1,5 +1,7 @@
+import {logger} from "../../utils/logger";
+
 export function categorize(score: number | string) {
-    if (Number(score) < 50) return "At Risk";
-    if (Number(score) < 75) return "Middle";
-    return "Healthy";
+  const category = Number(score) < 50 ? "At Risk" : Number(score) < 75 ? "Middle" : "Healthy";
+  logger.info("Categorized score", { score, category });
+  return category;
 }

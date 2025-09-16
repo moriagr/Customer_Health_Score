@@ -239,7 +239,6 @@ describe("Score Utilities", () => {
         customer_id: 1,
         customer_name: "TestCustomer",
         segment: "Enterprise",
-        total_features: 10,
         tickets: createTickets([
           ["open", "low", new Date(), null],
           ["open", "medium", new Date(), null],
@@ -276,7 +275,6 @@ describe("Score Utilities", () => {
         customer_id: 2,
         customer_name: "TestCo",
         segment: "SMB",
-        total_features: 5,
         tickets: [],
         invoices: [],
         events: [],

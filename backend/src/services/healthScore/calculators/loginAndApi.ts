@@ -1,7 +1,5 @@
 import { currEvent } from "../../../type/healthScoreType";
-
-// Reuse calcScore from featureAdoption
-import { calcScore } from "./featureAdoption";
+import {logger} from "../../../utils/logger";
 
 export function convertIntoCurrentAndPrev(events: currEvent[]) {
     let loginsCurrent = 0, loginsPrev = 0;
@@ -29,7 +27,8 @@ export function convertIntoCurrentAndPrev(events: currEvent[]) {
         }
     });
 
-    return { loginsCurrent, loginsPrev, featuresCurrent, featuresPrev, apiCurrent, apiPrev };
-}
 
-export { calcScore };
+    const result = { loginsCurrent, loginsPrev, featuresCurrent, featuresPrev, apiCurrent, apiPrev };
+    logger.info("Converted events into current and previous month counts", result);
+    return result;
+}

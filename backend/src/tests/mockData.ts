@@ -10,7 +10,6 @@ export const mockCustomers = [
     {
         customer_id: 1,
         customer_name: "Alice",
-        total_features: 5,
         segment: "Enterprise",
         events: [
             // Login events
@@ -47,7 +46,6 @@ export const mockCustomers = [
     {
         customer_id: 2,
         customer_name: "Bob",
-        total_features: 3,
         segment: "SMB",
         events: [],   // no events
         tickets: [],  // no tickets
@@ -56,7 +54,6 @@ export const mockCustomers = [
     {
         customer_id: 3,
         customer_name: "Charlie",
-        total_features: 4,
         segment: "SMB",
         events: [
             { id: 301, event_type: "login", created_at: now.toISOString() },

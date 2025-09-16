@@ -1,8 +1,11 @@
 import { Invoice } from "../../../type/healthScoreType";
+import {logger} from "../../../utils/logger";
 
 export function calcPaymentScore(invoices: Invoice[]) {
     if (!invoices || invoices.length === 0) {
-        return { onTime: 0, late: 0, unpaid: 0, score: 100, total: 0 };
+        const result = { onTime: 0, late: 0, unpaid: 0, score: 100, total: 0 };
+        logger.info("No invoices found, default payment score applied", result);
+        return result;
     }
 
     let onTime = 0, late = 0, unpaid = 0;
@@ -23,5 +26,7 @@ export function calcPaymentScore(invoices: Invoice[]) {
     const totalInvoices = invoices.length;
     const score = totalInvoices > 0 ? (onTime / totalInvoices) * 100 : 100;
 
-    return { onTime, late, unpaid, score, total: totalInvoices };
+    const result = { onTime, late, unpaid, score, total: totalInvoices };
+    logger.info("Calculated payment score", result);
+    return result;
 }
