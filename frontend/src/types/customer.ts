@@ -38,7 +38,6 @@ export interface CurrEvent {
     event_data: any;
 };
 
-
 export type PieData = {
     name: string;
     value: number;
@@ -85,13 +84,13 @@ export interface CurrCustomerDetail extends Customer {
     id: number;
 };
 
-export interface CustomerDetail extends Customer {
-    loginCount: number;
-    featureAdoption: number;
-    openTickets: number;
-    closedTickets: number;
-    highPriorityOpenTickets: number;
-    lateInvoices: number;
-    totalInvoices: number;
-    apiUsageChange: number;
-}
+// export interface CustomerDetail extends Customer {
+//     loginCount: number;
+//     featureAdoption: number;
+//     openTickets: number;
+//     closedTickets: number;
+//     highPriorityOpenTickets: number;
+//     lateInvoices: number;
+//     totalInvoices: number;
+//     apiUsageChange: number;
+// }

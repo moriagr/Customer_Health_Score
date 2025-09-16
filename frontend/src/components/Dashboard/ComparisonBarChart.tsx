@@ -6,15 +6,18 @@ interface Props {
     logins: number;
     features: number;
     apiCalls: number;
-  };
+  } | undefined;
   thisMonth: {
     logins: number;
     features: number;
     apiCalls: number;
-  };
+  } | undefined;
 }
 
 const CustomerComparisonChart: React.FC<Props> = ({ lastMonth, thisMonth }) => {
+  if(!lastMonth || !thisMonth){
+    return null;
+  }
   const data = [
     { metric: 'Login frequency', LastMonth: lastMonth.logins, ThisMonth: thisMonth.logins },
     { metric: 'Feature adoption rate', LastMonth: lastMonth.features, ThisMonth: thisMonth.features },

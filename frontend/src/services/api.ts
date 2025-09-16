@@ -1,83 +1,82 @@
-export async function fetchDashboardData(): Promise<any> {
-  try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/dashboard/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      }, credentials: 'include',
-    });
-    if (!response.ok) {
-      throw new Error(`There is a problem receiving data, please try again later.`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('There was a problem with the fetch operation:', error);
-    throw error;
-  }
-}
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import Axios from "./axiosInstance";
+import { CustomersState } from "../store/customerSlice";
 
-export async function fetchCustomers(): Promise<any> {
-  try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/customers`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        // "Authorization": `Bearer ${yourToken}`, // if you need auth
-      }, credentials: 'include',
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('There was a problem with the fetch operation:', error);
-    throw error;
-  }
-}
+const CACHE_DURATION = 2 * 60 * 60 * 1000; // 2 hours in ms
 
-export async function fetchCurrentCustomers(id: number): Promise<any> {
-  try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/customers/${id}/health`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        // "Authorization": `Bearer ${yourToken}`, // if you need auth
-      }, credentials: 'include',
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+export const loadDashboard = createAsyncThunk<
+    any, // replace with actual Dashboard type
+    void,
+    { state: { customers: CustomersState } }
+>(
+    "/customers/loadDashboard",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await Axios.get("/dashboard/");
+            return response.data;
+        } catch (err: any) {
+            return rejectWithValue(err.message);
+        }
+    },
+    {
+        condition: (_, { getState }) => {
+            const state = getState().customers;
+            if (state.summary && Date.now() - (state.summary.fetchedAt || 0) < CACHE_DURATION) {
+                return false; // skip fetching if cached and valid
+            }
+            return true;
+        },
     }
-    return await response.json();
-  } catch (error) {
-    console.error('There was a problem with the fetch operation:', error);
-    throw error;
-  }
-}
-export async function saveEventDetails(body: object, id: number): Promise<any> {
-  try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/customers/${id}/events`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        // "Authorization": `Bearer ${yourToken}`, // if you need auth
-      },
-      body: JSON.stringify(body),
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('There was a problem with the fetch operation:', error);
-    throw error;
-  }
-}
+);
 
-// export async function fetchCustomerDetail(id: number): Promise<CustomerDetail> {
-//   const res = await fetch(`${API_BASE}/customers/${id}/health`);
-//   return res.json();
-// }
+export const loadCustomers = createAsyncThunk<
+    any, // replace with Customer[]
+    void,
+    { state: { customers: CustomersState } }
+>(
+    "/customers/loadAll",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await Axios.get("/customers/");
+            return response.data;
+        } catch (err: any) {
+            return rejectWithValue(err.message);
+        }
+    },
+    {
+        condition: (_, { getState }) => {
+            const state = getState().customers;
+            // skip if customers already loaded
+            if (state.summary && Date.now() - (state.customers.fetchedAt || 0) < CACHE_DURATION) return false;
+            return true;
+        },
+    }
+);
+
+export const loadCustomerDetails = createAsyncThunk<
+    any, // replace with CurrCustomerDetail type
+    number,
+    { state: { customers: CustomersState } }
+>(
+    "/customers/loadCustomerDetails",
+    async (id, { rejectWithValue }) => {
+        try {
+            const response = await Axios.get(`/customers/${id}/health`);
+            return response.data;
+        } catch (err: any) {
+            return rejectWithValue(err.message);
+        }
+    },
+    {
+        condition: (id, { getState }) => {
+            const state = getState().customers;
+            console.log('✌️state --->', state);
+            const cached = state.customerDetails[id];
+console.log('✌️state.customerDetails --->', state.customerDetails);
+            if (cached && Date.now() - cached.fetchedAt < CACHE_DURATION) {
+                return false; // skip fetching if cached and valid
+            }
+            return true;
+        },
+    }
+);

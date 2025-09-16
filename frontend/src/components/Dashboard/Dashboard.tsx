@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { fetchDashboardData } from '../../services/api';
-import { Customer, DashboardSummary, PieData } from '../../types/customer';
+import React, { useEffect, useState } from 'react';
+import { loadDashboard } from '../../services/api';
+import { PieData } from '../../types/customer';
 import { TopAtRisk } from './TopAtRisk';
 import { GenericPieChart } from './HealthPieChart';
 import { CustomerList } from './CustomerTable';
@@ -10,35 +10,20 @@ import { ErrorBox } from '../UI/ErrorBox/index';
 import { CustomButton } from '../UI/CustomButton/Index';
 import { HealthCategory } from '../../utils/healthUtils';
 import { COLORS } from '../../utils/colors';
+import { AppDispatch, RootState } from '../../store';
+import { useDispatch, useSelector } from 'react-redux';
 
 export const Dashboard: React.FC = () => {
-    const [topAtRisk, setTopAtRisk] = useState<Customer[]>([]);
-    const [summary, setSummary] = useState<DashboardSummary>();
+    const dispatch = useDispatch<AppDispatch>();
+    const { summary, loading, error } = useSelector(
+        (state: RootState) => state.customers
+    );
     const [selectedCustomerId, setSelectedCustomerId] = useState<number | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const [showAll, setShowAll] = useState(false);
 
-    const getData = useCallback(() => {
-        setLoading(true);
-        setError(null);
-        fetchDashboardData()
-            .then(handleSplitToArrays)
-            .catch((err) => {
-                setError(err.message || "Failed to load dashboard data");
-                setLoading(false);
-            }).finally(() => setLoading(false));
-    }, [])
-
     useEffect(() => {
-        getData();
-    }, [getData]);
-
-    const handleSplitToArrays = (body: { topAtRisk: Customer[], summary: DashboardSummary }) => {
-        setTopAtRisk(body.topAtRisk || [])
-        setSummary(body.summary)
-    }
-
+        dispatch(loadDashboard());
+    }, [dispatch]);
 
 
     const handleSelectCustomer = (id: number) => {
@@ -49,7 +34,7 @@ export const Dashboard: React.FC = () => {
         return <Loading />;
     }
     if (error) {
-        return <ErrorBox error={error} tryAgain={getData} />;
+        return <ErrorBox error={error} tryAgain={() => { dispatch(loadDashboard()) }} />;
     }
 
     if (selectedCustomerId) {
@@ -61,8 +46,8 @@ export const Dashboard: React.FC = () => {
     }
     let data: PieData[] = [];
 
-    if (summary) {
-        const { total_customers, ...categoryCounts } = summary;
+    if (summary && summary.data && Object.keys(summary.data).length > 0) {
+        const { total_customers, ...categoryCounts } = summary.data;
         const total = total_customers || 0;
 
 
@@ -75,9 +60,9 @@ export const Dashboard: React.FC = () => {
     return (
         <div style={{ padding: 20 }}>
             <h1>Customer Health Dashboard</h1>
-            <TopAtRisk topCustomers={topAtRisk} onSelectCustomer={handleSelectCustomer} />
+            <TopAtRisk onSelectCustomer={handleSelectCustomer} />
             <CustomButton onClickFunc={() => setShowAll(true)} text={"View All Customers"} />
-            {data ? <GenericPieChart total={summary?.total_customers} data={data} text="Customer Health" colors={COLORS} /> : <></>}
+            {data ? <GenericPieChart total={summary?.data?.total_customers} data={data} text="Customer Health" colors={COLORS} /> : <></>}
         </div>
     );
 };
