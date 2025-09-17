@@ -31,13 +31,12 @@ async function createSampleData() {
     const segmentName = segments[Math.floor(Math.random() * segments.length)];
     const segmentId = segmentMap[segmentName];
     const createdAt = faker.date.past(2);
-    const totalFeatures = Math.floor(Math.random() * (15 - 3 + 1)) + 3;
 
     const res = await db.query(`
-      INSERT INTO customers (name, segment_id, created_at, total_features)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO customers (name, segment_id, created_at)
+      VALUES ($1, $2, $3)
       RETURNING id
-    `, [name, segmentId, createdAt, totalFeatures]);
+    `, [name, segmentId, createdAt]);
 
     const customerId = res.rows[0].id;
     customerIds.push(customerId);
@@ -45,9 +44,9 @@ async function createSampleData() {
     // Decide target category with weighted probability
     const rand = Math.random();
     let targetCategory: 'Healthy' | 'Middle' | 'At Risk';
-    if (rand < 0.3) targetCategory = 'Middle';
-    else if (rand < 0.7) targetCategory = 'Healthy';
-      else targetCategory = 'At Risk';
+    if (rand < 0.4) targetCategory = 'At Risk';
+    else if (rand < 0.5) targetCategory = 'Middle';
+    else targetCategory = 'Healthy';
 
     // 3️⃣ Generate events biased by category
     await generateEvents(customerId, targetCategory);
@@ -74,10 +73,10 @@ async function generateEvents(customerId: number, targetCategory: 'Healthy' | 'M
         period = Math.random() < 0.7 ? 'current' : 'prev';
         break;
       case 'Middle':
-        period = Math.random() < 0.5 ? 'current' : 'prev';
+        period = Math.random() < 0.4 ? 'current' : 'prev';
         break;
       case 'At Risk':
-        period = Math.random() < 0.3 ? 'current' : 'prev';
+        period = Math.random() < 0.5 ? 'current' : 'prev';
         break;
     }
 
@@ -140,15 +139,82 @@ async function generateEvents(customerId: number, targetCategory: 'Healthy' | 'M
   }
 }
 
-// --- Helper functions ---
-function generateSupportTicketsData(target: string) {
-  switch (target) {
-    case 'Healthy': return { high: 0, medium: 1, open: 2, pending: 0, closed: 5 };
-    case 'Middle': return { high: 1, medium: 2, open: 3, pending: 1, closed: 3 };
-    case 'At Risk': return { high: 3, medium: 3, open: 4, pending: 2, closed: 1 };
-    default: return { high: 0, medium: 1, open: 2, pending: 0, closed: 5 };
+// Helper to generate a random boolean with a given probability
+function chance(probability: number): boolean {
+  return Math.random() < probability;
+}
 
+// Helper to generate a random number within a range, possibly zero
+function getRandomInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function generateSupportTicketsData(target: string) {
+  // Decide whether to generate tickets at all
+  const generateTickets = chance(0.8); // 80% chance to generate tickets
+  if (!generateTickets) {
+    // Possibly no tickets at all
+    return { high: 0, medium: 0, open: 0, pending: 0, closed: 0 };
   }
+
+  // Generate total number of tickets randomly
+  const totalTickets = getRandomInt(0, 20); // up to 20 tickets
+
+  // Initialize counts
+  let high = 0,
+    medium = 0,
+    open = 0,
+    pending = 0,
+    closed = 0;
+
+  for (let i = 0; i < totalTickets; i++) {
+    // Randomly determine ticket status
+    const statusProb = Math.random();
+
+    let status: 'open' | 'pending' | 'closed';
+
+    if (statusProb < 0.5) {
+      status = 'open';
+    } else if (statusProb < 0.8) {
+      status = 'pending';
+    } else {
+      status = 'closed';
+    }
+
+    // Randomly determine priority
+    const priorityProb = Math.random();
+    let priority: 'high' | 'medium' | 'low';
+
+    if (priorityProb < 0.2) {
+      priority = 'high';
+    } else if (priorityProb < 0.5) {
+      priority = 'medium';
+    } else {
+      priority = 'low';
+    }
+
+    // Count based on status and priority
+    if (status === 'open') {
+      open++;
+    } else if (status === 'pending') {
+      pending++;
+    } else {
+      closed++;
+    }
+
+    if (priority === 'high') {
+      high++;
+    } else if (priority === 'medium') {
+      medium++;
+    }
+    // Low priority is not counted here, but you could extend if needed
+  }
+
+  // Optionally, you could also generate some tickets with only certain types
+  // For example, sometimes only high priority, or only closed tickets, etc.
+  // But for simplicity, the above makes a more random and diverse set.
+
+  return { high, medium, open, pending, closed };
 }
 
 function generateInvoicesData(target: string) {

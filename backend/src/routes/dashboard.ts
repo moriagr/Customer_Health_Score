@@ -13,6 +13,4 @@ router.get('/', (req, res, next) => {
     next();
 }, getAllCustomersWithHealth);
 
-module.exports = router;
-export default router;
-
+export = router;  // ✅ CommonJS-style export

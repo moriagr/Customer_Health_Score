@@ -5,7 +5,6 @@ import customerRoutes from "../routes/customers";
 import dashboardRoute from "../routes/dashboard";
 import * as customerModel from "../models/customerModel";
 import { mockCustomers } from "./mockData";
-import { getAllCustomersWithHealth } from "../controllers/customersController";
 
 
 // Create Express app

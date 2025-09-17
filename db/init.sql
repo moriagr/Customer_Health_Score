@@ -41,19 +41,6 @@ CREATE TABLE invoices (
 );
 
 
-CREATE TABLE features (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    description TEXT
-);
-
-CREATE TABLE customer_features (
-    customer_id INT REFERENCES customers(id) ON DELETE CASCADE,
-    feature_id INT REFERENCES features(id) ON DELETE CASCADE,
-    first_used_at TIMESTAMP
-);
-
-
 -- -- ============================
 -- -- Segments
 -- -- ============================

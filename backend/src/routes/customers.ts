@@ -22,8 +22,6 @@ router.post('/:id/events', (req, res, next) => {
     next();
 }, recordEvent);
 
-export default router;
-
-module.exports = router;
+export = router;   // ✅ CommonJS-style export
 
 
