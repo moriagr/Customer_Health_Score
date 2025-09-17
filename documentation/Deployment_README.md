@@ -2,17 +2,36 @@
 ## Live URL
 ## Deployment Steps
 1. Clone repo and `cd` into project.
+   
+## Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) installed
+- [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) installed
+- A Heroku account
+- Project structure:
+  ```bash
+  project-root/
+  |- backend/
+  |- frontend/
+  |- Dockerfile
+  |- docker-compose.yml
+  ```
+
+---
+
+## Heroku Setup
+
 ### Step 1: Prepare React Frontend
 1. Go to the frontend folder:
 ```bash
 cd frontend 
 ```
-2. Build React for production:
+1. Build React for production:
 ```bash
 npm install
 npm run build
 ```
-3. This creates a `build/` folder inside frontend/
+1. This creates a `build/` folder inside frontend/
 
 ### Step 2: Prepare PostgreSQL for Heroku
 
