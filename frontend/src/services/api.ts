@@ -12,7 +12,8 @@ export const loadDashboard = createAsyncThunk<
     "/customers/loadDashboard",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await Axios.get("/dashboard/");
+            const response = await Axios.get("/api/dashboard/");
+console.log('✌️response --->', response);
             return response.data;
         } catch (err: any) {
             return rejectWithValue(err.message);
@@ -37,7 +38,7 @@ export const loadCustomers = createAsyncThunk<
     "/customers/loadAll",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await Axios.get("/customers/");
+            const response = await Axios.get("/api/customers/");
             return response.data;
         } catch (err: any) {
             return rejectWithValue(err.message);
@@ -61,7 +62,7 @@ export const loadCustomerDetails = createAsyncThunk<
     "/customers/loadCustomerDetails",
     async (id, { rejectWithValue }) => {
         try {
-            const response = await Axios.get(`/customers/${id}/health`);
+            const response = await Axios.get(`/api/customers/${id}/health`);
             return response.data;
         } catch (err: any) {
             return rejectWithValue(err.message);
@@ -70,9 +71,7 @@ export const loadCustomerDetails = createAsyncThunk<
     {
         condition: (id, { getState }) => {
             const state = getState().customers;
-            console.log('✌️state --->', state);
             const cached = state.customerDetails[id];
-console.log('✌️state.customerDetails --->', state.customerDetails);
             if (cached && Date.now() - cached.fetchedAt < CACHE_DURATION) {
                 return false; // skip fetching if cached and valid
             }

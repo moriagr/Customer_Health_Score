@@ -56,9 +56,6 @@ export interface CurrCustomerDetail extends Customer {
         late: number,
         total: number,
     };
-    total_features: number;
-    // currentMonth: { loginsCurrent, featuresCurrent, apiCurrent },
-    // lastMonth: { loginsPrev, featuresPrev, apiPrev },
     ticketsData?: {
         openTickets: number,
         mediumTickets: number,
@@ -66,7 +63,6 @@ export interface CurrCustomerDetail extends Customer {
         closedTickets: number,
         pendingTickets: number
     }
-    // score: { total: number, feature: number, login: number, support: number, payment: number, api: number };
     lastMonth?: {
         logins: number;
         features: number;

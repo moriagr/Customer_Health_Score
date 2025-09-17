@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { loadCustomerDetails } from '../../services/api';
 import { PieData } from '../../types/customer';
-import { Card } from '../UI/Card';
 import { DataStateHandler } from '../Layout/DataStateHandler';
 import CustomerComparisonChart from './ComparisonBarChart';
 import { GenericPieChart } from './HealthPieChart';
 import { PresentScore } from '../UI/PresentScore';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
+import CustomerDetailsAccordion from './CustomerDetailsAccordion';
 
 interface Props {
     customerId: number;
@@ -16,21 +16,17 @@ interface Props {
 
 export const CustomerDetail: React.FC<Props> = ({ customerId, onBack }) => {
 
-
     const dispatch = useDispatch<AppDispatch>();
+
     const { loading, customerDetails, error } = useSelector(
         (state: RootState) => state.customers
     );
-
 
     useEffect(() => {
         dispatch(loadCustomerDetails(customerId));
     }, [dispatch, customerId]);
 
 
-    function printDate(date: Date | null): string {
-        return (date ? JSON.stringify(date) : "N/A");
-    }
     let dataTicket: PieData[] = [], totalTickets = 0;
     let dataInvoices: PieData[] = [], totalInvoices = 0;
 
@@ -120,51 +116,7 @@ export const CustomerDetail: React.FC<Props> = ({ customerId, onBack }) => {
                 {customerDetails[customerId]?.data?.tickets.length > 0 && <GenericPieChart colors={colorsTickets} total={totalTickets} data={dataTicket} text="Support ticket volume" />}
                 {customerDetails[customerId]?.data?.invoices.length > 0 && <GenericPieChart colors={colorsInvoices} total={totalInvoices} data={dataInvoices} text="Invoice payment timeliness" />}
             </div>
-            <h2>Detailed Health Scores:</h2>
-
-            {/* Events */}
-            <h3>Events</h3>
-            {customerDetails[customerId]?.data?.events && customerDetails[customerId]?.data?.events.length > 0 ? (
-                customerDetails[customerId]?.data?.events.map((event, idx) => {
-                    return <Card key={idx} style={{ marginBottom: 10 }}>
-                        <p><strong>Event:</strong> {event.event_type}</p>
-                        <p><strong>Date:</strong> {printDate(event.created_at)}</p>
-                        <p><strong>Description:</strong> {JSON.stringify(event.event_data)}</p>
-                    </Card>
-                })
-            ) : (
-                <p>No events found.</p>
-            )}
-
-            {/* Tickets */}
-            <h3>Tickets</h3>
-            {customerDetails[customerId]?.data?.tickets && customerDetails[customerId]?.data?.tickets.length > 0 ? (
-                customerDetails[customerId]?.data?.tickets.map((ticket) => (
-                    <Card key={ticket.id} style={{ marginBottom: 10 }}>
-                        <p><strong>Status:</strong> {ticket.status}</p>
-                        <p><strong>Priority:</strong> {ticket.priority}</p>
-                        <p><strong>Created:</strong> {printDate(ticket.created_at)}</p>
-                        <p><strong>Resolved:</strong> {printDate(ticket.resolved_at)}</p>
-                    </Card>
-                ))
-            ) : (
-                <p>No tickets.</p>
-            )}
-
-            {/* Invoices */}
-            <h3>Invoices</h3>
-            {customerDetails[customerId]?.data?.invoices && customerDetails[customerId]?.data?.invoices.length > 0 ? (
-                customerDetails[customerId]?.data?.invoices.map((invoice) => (
-                    <Card key={invoice.id} style={{ marginBottom: 10 }}>
-                        <p><strong>Amount:</strong> {invoice.amount}$</p>
-                        <p><strong>Status:</strong> {invoice.status}</p>
-                        <p><strong>Due Date:</strong> {printDate(invoice.due_date)}</p>
-                        <p><strong>Paid Date:</strong> {printDate(invoice.paid_date) ?? 'Not paid'}</p>
-                    </Card>
-                ))
-            ) : (
-                <p>No invoices.</p>
-            )}
+            <CustomerDetailsAccordion customer={customerDetails[customerId]?.data}/>
         </DataStateHandler>
     )
 };
