@@ -155,8 +155,7 @@ Fetch a single customer by ID with health and event details.
     "unpaid": 0,
     "score": 0,
     "total": 3
-  },
-  "total_features": 4
+  }
 }
 ```
 

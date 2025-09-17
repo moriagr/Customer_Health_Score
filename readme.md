@@ -149,3 +149,8 @@ See [API Documentation](./documentation/API_README.md) for more details.
 
 The research documents the methodology behind the customer health score calculation, including metric definitions, weighting, and scoring rationale.  
 See [Research Documentation](./documentation/Research_README.md) for more details.
+
+---
+## Architecture Overview
+
+A full-stack app with React frontend, Node.js backend, and PostgreSQL. Calculates customer health scores from events, tickets, and invoices. Containerized with Docker Compose for easy deployment.See [Architecture Overview](./documentation/Architecture_Overview_README.md) for more details.

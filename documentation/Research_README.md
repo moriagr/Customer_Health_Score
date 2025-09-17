@@ -9,7 +9,7 @@ It helps predict **churn risk** vs. **retention strength**, guiding customer suc
 Companies measure health in multiple ways:
 - **Numeric points system** (0–100 or weighted scores)  
 - **Ranking system** (A, B, C, D)  
-- **Color coding** (Green = good, Yellow = medium, Red = at risk)
+- **Color coding** (Green = healthy, Yellow = middle, Red = at risk)
 
 In the system I created I use a calculated **Numeric points system** for exact score, as well as **Color coding** for clarity and visualization.
 
@@ -99,3 +99,10 @@ In the system I created I use a calculated **Numeric points system** for exact s
         supportScore * 0.20 +
         paymentScore * 0.15 +
         apiScore * 0.10`
+
+
+## Categorizing Score:
+This is the way to split the customers into at risk, middle and healthy:
+* **At Risk** - between 0-49
+* **Middle** - between 50-74
+* **healthy** - between 75-100
