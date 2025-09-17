@@ -47,10 +47,10 @@ heroku config:set
   DATABASE_URL=<your-db-url> \
   NODE_ENV=production \
   FRONTEND_URL=<your-frontend-url> \
+  PORT=8000 \
   REACT_APP_API_URL=http://<your-backend-url>
 
 ```
-
 
 
 ### step 4: Deploy using Heroku CLI
@@ -115,3 +115,8 @@ Support tickets' data history
 ![support tickets data](image-6.png)
 Invoice payment timeliness history
 ![Invoices data](image-7.png)
+
+
+## Application Logs in Production:
+
+![application logs in production](image-8.png)
