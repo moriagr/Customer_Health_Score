@@ -106,3 +106,35 @@ Here's a partial example of how I worked with ChatGPT for the research (for clar
 
 **ChatGPT answer:** Recommended strategies for assigning weights to different health score factors, providing a data-driven approach to scoring. 
 
+### 4) Deployment of React + Node + PostgreSQL App to Heroku
+
+Here's a partial example of how I worked with ChatGPT for deployment explanation (for clarity, I shortened parts of the answers):
+
+**Prompt:** *Explain each health score factor:*
+* *Login frequency*
+* *Feature adoption rate*
+* *Support ticket volume*
+* *Invoice payment timeliness*
+* *API usage trends*
+
+**ChatGPT answer:** Broke down each factor with definitions, measurement methods, and its significance in overall customer health scoring.
+ 
+---
+**Prompt:** *when do I get those tickets?*
+
+**ChatGPT answer:** Clarified timing and conditions under which support tickets are logged.
+
+---
+**Prompt:** *what events means?*
+
+**ChatGPT answer:** Explained that events represent any customer interactions or activities in the product—essentially footprints showing engagement.
+
+---
+**Prompt:** *What are API usage trends?*
+
+**ChatGPT answer:** Detailed how API usage metrics reflect customer engagement patterns.
+
+---
+**Prompt:** *what kind of weights method do you suggest?*
+
+**ChatGPT answer:** Recommended strategies for assigning weights to different health score factors, providing a data-driven approach to scoring. 

@@ -12,11 +12,10 @@ export const loadDashboard = createAsyncThunk<
     "/customers/loadDashboard",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await Axios.get("/api/dashboard/");
-console.log('✌️response --->', response);
+            const response = await Axios.get("/dashboard/");
             return response.data;
         } catch (err: any) {
-            return rejectWithValue(err.message);
+            return rejectWithValue(err?.response?.data?.message || err.message);
         }
     },
     {
@@ -38,10 +37,10 @@ export const loadCustomers = createAsyncThunk<
     "/customers/loadAll",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await Axios.get("/api/customers/");
+            const response = await Axios.get("/customers/");
             return response.data;
         } catch (err: any) {
-            return rejectWithValue(err.message);
+            return rejectWithValue(err?.response?.data.message || err.message);
         }
     },
     {
@@ -62,10 +61,10 @@ export const loadCustomerDetails = createAsyncThunk<
     "/customers/loadCustomerDetails",
     async (id, { rejectWithValue }) => {
         try {
-            const response = await Axios.get(`/api/customers/${id}/health`);
+            const response = await Axios.get(`/customers/${id}/health`);
             return response.data;
         } catch (err: any) {
-            return rejectWithValue(err.message);
+            return rejectWithValue(err?.response?.data.message || err.message);
         }
     },
     {

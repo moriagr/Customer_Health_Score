@@ -76,7 +76,7 @@ async function generateEvents(customerId: number, targetCategory: 'Healthy' | 'M
         period = Math.random() < 0.4 ? 'current' : 'prev';
         break;
       case 'At Risk':
-        period = Math.random() < 0.5 ? 'current' : 'prev';
+        period = Math.random() < 0.2 ? 'current' : 'prev';
         break;
     }
 
@@ -230,7 +230,7 @@ function generateInvoicesData(target: string) {
       status = faker.helpers.randomize(['paid', 'late']);
       if (status === 'late') paid_date = null;
     } else if (target === 'At Risk') {
-      status = faker.helpers.randomize(['unpaid', 'late']);
+      status = faker.helpers.randomize(['unpaid', 'late', 'paid']);
       paid_date = null;
     }
 
