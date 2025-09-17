@@ -68,14 +68,22 @@ Now you can sign into Container Registry
 ```bash
 heroku container:login
 ```
-3. **Push your Docker-based app:**
+
+1. **Connect heroku git into app:**
+Connect the heroku git into the current directory. It will not disconnect the project from the app git repository
+
+```bash
+heroku git:remote -a health-score-dashboard
+```
+
+1. **Push your Docker-based app:**
 Build the Dockerfile in the current directory and push the Docker image
 
 ```bash
     heroku container:push web
 ```
 
-4. **Deploy the changes:**
+5. **Deploy the changes:**
 Release the newly pushed images to deploy your app
 
 ```bash
