@@ -1,0 +1,121 @@
+[2025-09-17T09:24:57.027Z] INFO: Fetched all customers {}
+[2025-09-17T09:24:57.148Z] ERROR: Error in getAll() {"error":"DB error","stack":"Error: DB error\n    at Object.<anonymous> (C:\\projects\\Customer_Health_Score\\backend\\src\\tests\\mockApi.test.ts:28:53)\n    at Promise.finally.completed (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1556:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1496:10)\n    at _callCircusTest (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1006:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:946:3)\n    at _runTestsForDescribeBlock (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1917:21)\n    at jestAdapter (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-runner\\build\\testWorker.js:275:16)\n    at runTest (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-runner\\build\\testWorker.js:343:7)\n    at Object.worker (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-runner\\build\\testWorker.js:497:12)"}
+[2025-09-17T09:24:57.154Z] INFO: Fetched customer by id {"id":1}
+[2025-09-17T09:24:57.168Z] ERROR: Error in getById() {"id":1,"error":"DB error","stack":"Error: DB error\n    at Object.<anonymous> (C:\\projects\\Customer_Health_Score\\backend\\src\\tests\\mockApi.test.ts:46:53)\n    at Promise.finally.completed (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1556:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1496:10)\n    at _callCircusTest (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1006:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:946:3)\n    at _runTestsForDescribeBlock (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1917:21)\n    at jestAdapter (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-runner\\build\\testWorker.js:275:16)\n    at runTest (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-runner\\build\\testWorker.js:343:7)\n    at Object.worker (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-runner\\build\\testWorker.js:497:12)"}
+[2025-09-17T09:24:57.182Z] INFO: Transaction started {"customerId":1}
+[2025-09-17T09:24:57.185Z] INFO: Inserted event {"customerId":1,"type":"login"}
+[2025-09-17T09:24:57.187Z] INFO: Inserted ticket {"customerId":1,"status":"open","priority":"high"}
+[2025-09-17T09:24:57.189Z] INFO: Inserted invoice {"customerId":1,"amount":100,"dueDate":"2025-09-20","status":"unpaid"}
+[2025-09-17T09:24:57.191Z] INFO: Transaction committed {"customerId":1}
+[2025-09-17T09:24:57.203Z] INFO: Transaction started {"customerId":1}
+[2025-09-17T09:24:57.234Z] ERROR: Transaction rolled back {"customerId":1,"error":"Error saving customer events: Insert failed","stack":"Error: Error saving customer events: Insert failed\n    at Object.<anonymous> (C:\\projects\\Customer_Health_Score\\backend\\src\\tests\\mockApi.test.ts:88:58)\n    at C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-mock\\build\\index.js:305:39\n    at Object.<anonymous> (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-mock\\build\\index.js:312:13)\n    at Object.mockConstructor [as query] (C:\\projects\\Customer_Health_Score\\backend\\node_modules\\jest-mock\\build\\index.js:102:19)\n    at query (C:\\projects\\Customer_Health_Score\\backend\\src\\models\\customerModel.ts:247:18)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at Object.<anonymous> (C:\\projects\\Customer_Health_Score\\backend\\src\\tests\\mockApi.test.ts:91:9)"}
+[2025-09-17T09:24:57.242Z] WARN: Customer not found {"id":123}
+[2025-09-17T09:24:57.246Z] INFO: Transaction started {"customerId":1}
+[2025-09-17T09:24:57.249Z] INFO: Inserted ticket {"customerId":1,"status":"open","priority":"high"}
+[2025-09-17T09:24:57.250Z] INFO: Transaction committed {"customerId":1}
+[2025-09-17T09:24:57.257Z] INFO: Transaction started {"customerId":2}
+[2025-09-17T09:24:57.258Z] INFO: Inserted invoice {"customerId":2,"amount":200,"dueDate":"2025-10-01","status":"unpaid"}
+[2025-09-17T09:24:57.260Z] INFO: Transaction committed {"customerId":2}
+[2025-09-17T09:24:57.264Z] INFO: Transaction started {"customerId":3}
+[2025-09-17T09:24:57.266Z] INFO: Inserted event {"customerId":3,"type":"login"}
+[2025-09-17T09:24:57.268Z] INFO: Inserted ticket {"customerId":3,"status":"pending","priority":"low"}
+[2025-09-17T09:24:57.270Z] INFO: Inserted invoice {"customerId":3,"amount":50,"dueDate":"2025-12-01","status":"paid"}
+[2025-09-17T09:24:57.273Z] INFO: Transaction committed {"customerId":3}
+[2025-09-17T09:24:57.297Z] WARN: Attempted to add empty record {"customerId":1}
+[2025-09-17T09:24:58.034Z] INFO: Converted events into current and previous month counts {"loginsCurrent":1,"loginsPrev":1,"featuresCurrent":1,"featuresPrev":1,"apiCurrent":1,"apiPrev":1}
+[2025-09-17T09:24:58.070Z] INFO: Separated support tickets {"highTickets":1,"mediumTickets":1,"openTickets":1,"closedTickets":2,"pendingTickets":1}
+[2025-09-17T09:24:58.077Z] INFO: Calculated Support ticket score 
+[2025-09-17T09:24:58.082Z] INFO: Categorized score {"score":20,"category":"At Risk"}
+[2025-09-17T09:24:58.087Z] INFO: Categorized score {"score":60,"category":"Middle"}
+[2025-09-17T09:24:58.091Z] INFO: Categorized score {"score":90,"category":"Healthy"}
+[2025-09-17T09:24:58.098Z] INFO: Calculated score for API / login / Feature_use  
+[2025-09-17T09:24:58.103Z] INFO: Calculated score for API / login / Feature_use  
+[2025-09-17T09:24:58.124Z] INFO: Calculated Support ticket score 
+[2025-09-17T09:24:58.130Z] INFO: No invoices found, default payment score applied {"onTime":0,"late":0,"unpaid":0,"score":100,"total":0}
+[2025-09-17T09:24:58.139Z] INFO: Calculated payment score {"onTime":1,"late":2,"unpaid":1,"score":25,"total":4}
+[2025-09-17T09:24:58.146Z] INFO: Calculated overall score {"featureScore":100,"loginScore":50,"supportScore":80,"paymentScore":90,"apiScore":60,"total":78}
+[2025-09-17T09:24:58.153Z] INFO: Converted events into current and previous month counts {"loginsCurrent":1,"loginsPrev":0,"featuresCurrent":1,"featuresPrev":0,"apiCurrent":1,"apiPrev":0}
+[2025-09-17T09:24:58.156Z] INFO: Separated support tickets {"highTickets":0,"mediumTickets":1,"openTickets":1,"closedTickets":1,"pendingTickets":1}
+[2025-09-17T09:24:58.160Z] INFO: Calculated Support ticket score 
+[2025-09-17T09:24:58.164Z] INFO: Calculated payment score {"onTime":1,"late":1,"unpaid":0,"score":50,"total":2}
+[2025-09-17T09:24:58.168Z] INFO: Calculated overall score {"featureScore":100,"loginScore":100,"supportScore":73.33333333333334,"paymentScore":50,"apiScore":100,"total":87.2}
+[2025-09-17T09:24:58.170Z] INFO: Calculated customer score {"customerId":1,"score":87.2,"scores":{"featureScore":100,"loginScore":100,"supportScore":73.33333333333334,"paymentScore":50,"apiScore":100,"total":87.2},"currentMonth":{"logins":1,"features":1,"apiCalls":1},"lastMonth":{"logins":0,"features":0,"apiCalls":0},"ticketsData":{"openTickets":1,"mediumTickets":1,"highTickets":0,"closedTickets":1,"pendingTickets":1},"invoicePayment":{"onTime":1,"late":1,"unpaid":0,"score":50,"total":2}}
+[2025-09-17T09:24:58.180Z] INFO: Converted events into current and previous month counts {"loginsCurrent":0,"loginsPrev":0,"featuresCurrent":0,"featuresPrev":0,"apiCurrent":0,"apiPrev":0}
+[2025-09-17T09:24:58.185Z] INFO: Separated support tickets {"highTickets":0,"mediumTickets":0,"openTickets":0,"closedTickets":0,"pendingTickets":0}
+[2025-09-17T09:24:58.194Z] INFO: No invoices found, default payment score applied {"onTime":0,"late":0,"unpaid":0,"score":100,"total":0}
+[2025-09-17T09:24:58.202Z] INFO: Calculated overall score {"featureScore":0,"loginScore":0,"supportScore":100,"paymentScore":100,"apiScore":0,"total":35}
+[2025-09-17T09:24:58.207Z] INFO: Calculated customer score {"customerId":2,"score":35,"scores":{"featureScore":0,"loginScore":0,"supportScore":100,"paymentScore":100,"apiScore":0,"total":35},"currentMonth":{"logins":0,"features":0,"apiCalls":0},"lastMonth":{"logins":0,"features":0,"apiCalls":0},"ticketsData":{"openTickets":0,"mediumTickets":0,"highTickets":0,"closedTickets":0,"pendingTickets":0},"invoicePayment":{"onTime":0,"late":0,"unpaid":0,"score":100,"total":0}}
+[2025-09-17T09:24:58.209Z] INFO: Generated detailed customer health report {"customerId":2}
+[2025-09-17T09:24:59.667Z] INFO: Incoming request {"method":"GET","url":"/api/dashboard"}
+[2025-09-17T09:24:59.700Z] INFO: Converted events into current and previous month counts {"loginsCurrent":1,"loginsPrev":1,"featuresCurrent":1,"featuresPrev":1,"apiCurrent":1,"apiPrev":1}
+[2025-09-17T09:24:59.707Z] INFO: Separated support tickets {"highTickets":1,"mediumTickets":1,"openTickets":0,"closedTickets":1,"pendingTickets":1}
+[2025-09-17T09:24:59.711Z] INFO: Calculated score for API / login / Feature_use  
+[2025-09-17T09:24:59.715Z] INFO: Calculated score for API / login / Feature_use  
+[2025-09-17T09:24:59.717Z] INFO: Calculated Support ticket score 
+[2025-09-17T09:24:59.721Z] INFO: Calculated score for API / login / Feature_use  
+[2025-09-17T09:24:59.723Z] INFO: Calculated payment score {"onTime":1,"late":3,"unpaid":0,"score":25,"total":4}
+[2025-09-17T09:24:59.727Z] INFO: Calculated overall score {"featureScore":100,"loginScore":100,"supportScore":53.33333333333333,"paymentScore":25,"apiScore":100,"total":79.4}
+[2025-09-17T09:24:59.787Z] INFO: Categorized score {"score":79.4,"category":"Healthy"}
+[2025-09-17T09:24:59.797Z] INFO: Converted events into current and previous month counts {"loginsCurrent":0,"loginsPrev":0,"featuresCurrent":0,"featuresPrev":0,"apiCurrent":0,"apiPrev":0}
+[2025-09-17T09:24:59.799Z] INFO: Separated support tickets {"highTickets":0,"mediumTickets":0,"openTickets":0,"closedTickets":0,"pendingTickets":0}
+[2025-09-17T09:24:59.801Z] INFO: No invoices found, default payment score applied {"onTime":0,"late":0,"unpaid":0,"score":100,"total":0}
+[2025-09-17T09:24:59.802Z] INFO: Calculated overall score {"featureScore":0,"loginScore":0,"supportScore":100,"paymentScore":100,"apiScore":0,"total":35}
+[2025-09-17T09:24:59.804Z] INFO: Categorized score {"score":35,"category":"At Risk"}
+[2025-09-17T09:24:59.805Z] INFO: Converted events into current and previous month counts {"loginsCurrent":1,"loginsPrev":0,"featuresCurrent":1,"featuresPrev":0,"apiCurrent":1,"apiPrev":0}
+[2025-09-17T09:24:59.806Z] INFO: Separated support tickets {"highTickets":0,"mediumTickets":0,"openTickets":1,"closedTickets":0,"pendingTickets":0}
+[2025-09-17T09:24:59.808Z] INFO: Calculated Support ticket score 
+[2025-09-17T09:24:59.809Z] INFO: Calculated payment score {"onTime":0,"late":1,"unpaid":0,"score":0,"total":1}
+[2025-09-17T09:24:59.821Z] INFO: Calculated overall score {"featureScore":100,"loginScore":100,"supportScore":60,"paymentScore":0,"apiScore":100,"total":77}
+[2025-09-17T09:24:59.822Z] INFO: Categorized score {"score":77,"category":"Healthy"}
+[2025-09-17T09:24:59.823Z] INFO: Calculated health scores for customers {"count":3}
+[2025-09-17T09:24:59.825Z] INFO: Fetched dashboard data {"total":3,"healthyCount":2,"mediumCount":0,"atRiskCount":1}
+[2025-09-17T09:24:59.880Z] INFO: Incoming request {"method":"GET","url":"/api/customers"}
+[2025-09-17T09:24:59.884Z] INFO: Converted events into current and previous month counts {"loginsCurrent":0,"loginsPrev":0,"featuresCurrent":0,"featuresPrev":0,"apiCurrent":0,"apiPrev":0}
+[2025-09-17T09:24:59.885Z] INFO: Separated support tickets {"highTickets":0,"mediumTickets":0,"openTickets":0,"closedTickets":0,"pendingTickets":0}
+[2025-09-17T09:24:59.888Z] INFO: No invoices found, default payment score applied {"onTime":0,"late":0,"unpaid":0,"score":100,"total":0}
+[2025-09-17T09:24:59.890Z] INFO: Calculated overall score {"featureScore":0,"loginScore":0,"supportScore":100,"paymentScore":100,"apiScore":0,"total":35}
+[2025-09-17T09:24:59.891Z] INFO: Categorized score {"score":35,"category":"At Risk"}
+[2025-09-17T09:24:59.893Z] INFO: Converted events into current and previous month counts {"loginsCurrent":0,"loginsPrev":0,"featuresCurrent":0,"featuresPrev":0,"apiCurrent":0,"apiPrev":0}
+[2025-09-17T09:24:59.895Z] INFO: Separated support tickets {"highTickets":0,"mediumTickets":0,"openTickets":0,"closedTickets":0,"pendingTickets":0}
+[2025-09-17T09:24:59.896Z] INFO: No invoices found, default payment score applied {"onTime":0,"late":0,"unpaid":0,"score":100,"total":0}
+[2025-09-17T09:24:59.898Z] INFO: Calculated overall score {"featureScore":0,"loginScore":0,"supportScore":100,"paymentScore":100,"apiScore":0,"total":35}
+[2025-09-17T09:24:59.899Z] INFO: Categorized score {"score":35,"category":"At Risk"}
+[2025-09-17T09:24:59.900Z] INFO: Calculated health scores for customers {"count":2}
+[2025-09-17T09:24:59.906Z] INFO: Fetched all customers with health scores {"count":2}
+[2025-09-17T09:24:59.971Z] INFO: Incoming request {"method":"GET","url":"/api/customers/1/health","customerId":"1"}
+[2025-09-17T09:24:59.979Z] INFO: Converted events into current and previous month counts {"loginsCurrent":0,"loginsPrev":0,"featuresCurrent":0,"featuresPrev":0,"apiCurrent":0,"apiPrev":0}
+[2025-09-17T09:24:59.983Z] INFO: Separated support tickets {"highTickets":0,"mediumTickets":0,"openTickets":0,"closedTickets":0,"pendingTickets":0}
+[2025-09-17T09:24:59.992Z] INFO: No invoices found, default payment score applied {"onTime":0,"late":0,"unpaid":0,"score":100,"total":0}
+[2025-09-17T09:24:59.996Z] INFO: Calculated overall score {"featureScore":0,"loginScore":0,"supportScore":100,"paymentScore":100,"apiScore":0,"total":35}
+[2025-09-17T09:24:59.999Z] INFO: Calculated customer score {"score":35,"scores":{"featureScore":0,"loginScore":0,"supportScore":100,"paymentScore":100,"apiScore":0,"total":35},"currentMonth":{"logins":0,"features":0,"apiCalls":0},"lastMonth":{"logins":0,"features":0,"apiCalls":0},"ticketsData":{"openTickets":0,"mediumTickets":0,"highTickets":0,"closedTickets":0,"pendingTickets":0},"invoicePayment":{"onTime":0,"late":0,"unpaid":0,"score":100,"total":0}}
+[2025-09-17T09:25:00.002Z] INFO: Generated detailed customer health report {}
+[2025-09-17T09:25:00.008Z] INFO: Calculated detailed health for customer {"customerId":"1","score":35}
+[2025-09-17T09:25:00.230Z] INFO: Incoming request {"method":"POST","url":"/api/customers/1/events","customerId":"1"}
+[2025-09-17T09:25:00.241Z] INFO: Recorded customer event {"customerId":"1","options":{"eventType":"login"}}
+[2025-09-17T09:25:00.304Z] INFO: Incoming request {"method":"GET","url":"/api/customers"}
+[2025-09-17T09:25:00.307Z] ERROR: Error in getCustomers {"error":"DB connection failed"}
+[2025-09-17T09:25:00.309Z] ERROR: Error in getAllCustomers {"error":"Error fetching customers: DB connection failed"}
+[2025-09-17T09:25:00.333Z] INFO: Incoming request {"method":"GET","url":"/api/customers/999/health","customerId":"999"}
+[2025-09-17T09:25:00.335Z] WARN: Customer not found in getCustomerHealth {"customerId":"999"}
+[2025-09-17T09:25:00.382Z] INFO: Incoming request {"method":"GET","url":"/api/customers"}
+[2025-09-17T09:25:00.387Z] WARN: No customers returned from model.getAll() 
+[2025-09-17T09:25:00.390Z] WARN: No customers found in getAllCustomers 
+[2025-09-17T09:25:00.416Z] INFO: Incoming request {"method":"GET","url":"/api/customers/1/health","customerId":"1"}
+[2025-09-17T09:25:00.424Z] ERROR: Error in getCustomerHealth {"customerId":"1","error":"DB timeout"}
+[2025-09-17T09:25:00.505Z] INFO: Incoming request {"method":"POST","url":"/api/customers/1/events","customerId":"1"}
+[2025-09-17T09:25:00.510Z] ERROR: Error recording customer event {"customerId":"1","error":"Insert failed"}
+[2025-09-17T09:25:00.560Z] INFO: Incoming request {"method":"GET","url":"/api/dashboard"}
+[2025-09-17T09:25:00.564Z] ERROR: Error in getCustomers {"error":"Dashboard service error"}
+[2025-09-17T09:25:00.569Z] ERROR: Error in getAllCustomersWithHealth {"error":"Error fetching customers: Dashboard service error"}
+[2025-09-17T09:25:00.597Z] INFO: Incoming request {"method":"GET","url":"/api/customers"}
+[2025-09-17T09:25:00.607Z] ERROR: Error in getCustomers {"error":"DB connection failed"}
+[2025-09-17T09:25:00.621Z] ERROR: Error in getAllCustomers {"error":"Error fetching customers: DB connection failed"}
+[2025-09-17T09:25:00.667Z] INFO: Incoming request {"method":"GET","url":"/api/customers"}
+[2025-09-17T09:25:00.676Z] ERROR: Error in getCustomers {"error":"weird error"}
+[2025-09-17T09:25:00.680Z] ERROR: Error in getAllCustomers {"error":"Error fetching customers: weird error"}
+[2025-09-17T09:25:00.693Z] INFO: Incoming request {"method":"GET","url":"/api/customers"}
+[2025-09-17T09:25:00.697Z] ERROR: Error in getCustomers {"error":"Cannot read properties of null (reading 'forEach')"}
+[2025-09-17T09:25:00.700Z] ERROR: Error in getAllCustomers {"error":"Error fetching customers: Cannot read properties of null (reading 'forEach')"}
+[2025-09-17T09:25:00.729Z] INFO: Incoming request {"method":"GET","url":"/api/dashboard"}
+[2025-09-17T09:25:00.743Z] WARN: No customers returned from model.getAll() 
+[2025-09-17T09:25:00.751Z] WARN: No customers found for dashboard 

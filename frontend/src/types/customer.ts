@@ -79,14 +79,3 @@ export interface CurrCustomerDetail extends Customer {
     events: CurrEvent[];
     id: number;
 };
-
-// export interface CustomerDetail extends Customer {
-//     loginCount: number;
-//     featureAdoption: number;
-//     openTickets: number;
-//     closedTickets: number;
-//     highPriorityOpenTickets: number;
-//     lateInvoices: number;
-//     totalInvoices: number;
-//     apiUsageChange: number;
-// }

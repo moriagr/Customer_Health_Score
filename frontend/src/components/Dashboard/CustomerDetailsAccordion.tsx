@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Card } from "../UI/Card";
 import { CurrCustomerDetail } from "../../types/customer";
 // assuming printDate is already defined

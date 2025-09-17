@@ -40,16 +40,6 @@ const createEvents = (arr: [string, Date][]) =>
     created_at: date
   }));
 
-// function getFixedMonthAgo(date: Date, months: number) {
-//   const d = new Date(date);
-//   d.setMonth(d.getMonth() - months);
-//   // optional: clamp to max days of previous month
-//   const maxDays = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
-//   if (d.getDate() > maxDays) d.setDate(maxDays);
-//   return d;
-// }
-
-
 describe('convertIntoCurrentAndPrev', () => {
   it('correctly calculates current and previous counts for login, feature, and api', () => {
     const now = new Date("2025-09-14T10:00:00Z");
@@ -160,17 +150,6 @@ describe("Score Utilities", () => {
       expect(categorize(90)).toBe("Healthy");
     });
   });
-
-  // describe("calcFeatureAdoption()", () => {
-  //   it("calculates adoption percentage correctly", () => {
-  //     const features = new Set([1, 2, 3]);
-  //     expect(calcFeatureAdoption(features, 6)).toBe(50);
-  //   });
-  //   it("handles zero totalFeatures", () => {
-  //     const features = new Set([1, 2]);
-  //     expect(calcFeatureAdoption(features, 0)).toBe(0);
-  //   });
-  // });
 
   describe("calcScore()", () => {
     it("returns 0 if current = 0", () => {

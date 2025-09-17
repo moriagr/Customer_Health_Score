@@ -1,9 +1,61 @@
-version: "3.9"
-
 services:
+  backend:
+    build: ./backend
+    container_name: customer-health-backend
+    ports:
+      - "8000:8000"
+    restart: always
+    develop:
+      watch:
+        - path: ./backend
+          action: sync
+          target: /usr
+          ignore:
+            - node_modules/
+
+        - action: rebuild
+          path: package.json
+    volumes:
+      - ./frontend/build:/app/frontend/build   # 👈 mount built frontend here
+
+
+    environment:
+      - DB_USER=postgres
+      - DB_PASS=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=customer_health
+      - PORT=8000
+      - FRONTEND_URL=http://localhost:8000
+    depends_on:
+      - db
+      - frontend
+
+  frontend:
+    build: ./frontend
+    container_name: customer-health-frontend
+    command: npm run build 
+    volumes:
+    - ./frontend/build:/app/frontend/build 
+    restart: always
+
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+    develop:
+      watch:
+        - path: ./frontend
+          action: sync
+          target: /usr
+          ignore:
+            - node_modules/
+
+        - action: rebuild
+          path: package.json
+
   db:
     image: postgres:15
     container_name: customer-health-db
+    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -14,5 +66,20 @@ services:
       - db-data:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
+  # seeder:
+  #   build: ./backend
+  #   command: sh -c "npm install && npx ts-node ./src/generateData.ts"
+  #   depends_on:
+  #     - db
+  #     - backend
+  #   environment:
+  #     - DB_USER=postgres
+  #     - DB_PASS=postgres
+  #     - DB_HOST=db
+  #     - DB_PORT=5432
+  #     - DB_NAME=customer_health
+
 volumes:
   db-data:
+  frontend-build:
+

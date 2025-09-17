@@ -202,37 +202,4 @@ describe("Customer API error handling", () => {
 
 });
 
-// describe("getAllCustomersWithHealth error handling", () => {
-//     test("returns 500 if getCustomers rejects with Error", async () => {
-//         // Mock getCustomers to reject
-//         jest.spyOn(require("../controllers/customersController"), "getCustomers")
-//             .mockRejectedValue(new Error("DB failure"));
-
-//         // Mock req and res
-//         const req = {} as any;
-//         const json = jest.fn();
-//         const status = jest.fn(() => ({ json }));
-//         const res = { status } as any;
-
-//         await getAllCustomersWithHealth(req, res);
-
-//         expect(status).toHaveBeenCalledWith(500);
-//         expect(json).toHaveBeenCalledWith({ error: "DB failure" });
-//     });
-
-//     test("returns 500 if getCustomers rejects with non-Error", async () => {
-//         jest.spyOn(require("../controllers/customersController"), "getCustomers")
-//             .mockRejectedValue("weird failure");
-
-//         const req = {} as any;
-//         const json = jest.fn();
-//         const status = jest.fn(() => ({ json }));
-//         const res = { status } as any;
-
-//         await getAllCustomersWithHealth(req, res);
-
-//         expect(status).toHaveBeenCalledWith(500);
-//         expect(json).toHaveBeenCalledWith({ error: "weird failure" });
-//     });
-// });
-
+// 

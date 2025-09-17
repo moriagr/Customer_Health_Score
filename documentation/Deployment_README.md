@@ -1,10 +1,13 @@
 # Deployment Documentation
 ## Live URL
-## Deployment Steps
-1. Clone repo and `cd` into project.
+https://health-score-dashboard-75b13036f12a.herokuapp.com/
+
+## Note 
+**In the development environment, the React app is running on a different url then the Backend. In the production environment, the URL of the React app is the same as the backend (api). The React relative path is:`/` where the api's relative path is `/api/`**
    
 ## Prerequisites
 
+- Clone the repo from https://github.com/moriagr/customer-health-dashboard.git.
 - [Docker](https://docs.docker.com/get-docker/) installed
 - [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) installed
 - A Heroku account
@@ -15,6 +18,7 @@
   |- frontend/
   |- Dockerfile
   |- docker-compose.yml
+  |- db
   ```
 
 ---
@@ -26,63 +30,88 @@
 ```bash
 cd frontend 
 ```
-1. Build React for production:
+2. Build React for production:
 ```bash
 npm install
 npm run build
 ```
-1. This creates a `build/` folder inside frontend/
+3. This creates a `build/` folder inside frontend/
 
-### Step 2: Prepare PostgreSQL for Heroku
+### Step 2: Prepare PostgreSQL for Heroku 
+Create a PostgreSQL DB in Supabase and get the DB url and password
 
-1. Add PostgreSQL add-on to Heroku:
+### step 3: Set Environment Variables for production
+Set the following Heroku config vars:
+```.env
+heroku config:set 
+  DATABASE_URL=<your-db-url> \
+  NODE_ENV=production \
+  FRONTEND_URL=<your-frontend-url> \
+  REACT_APP_API_URL=http://<your-backend-url>
 
-```bash
-heroku addons:create heroku-postgresql:hobby-dev
-```
-2. Heroku will create a `DATABASE_URL` environment variable automatically.
-3. Update your backend to use it:
-
-### Step 3: Create Procfile
-In the root of your project, create a file named `Procfile` (no extension):
-```bash
-web: node backend/server.js
 ```
 
-### Step 4: Set Environment Variables on Heroku
+
+
+### step 4: Deploy using Heroku CLI
+1. If you haven't already, log into your Heroku account and follow the prompts to create a new SSH public key
 ```bash
 heroku login
-heroku create your-app-name
-heroku config:set NODE_ENV=production
-# DATABASE_URL is automatically set if you added PostgreSQL add-on
-
 ```
-
-### Step 5: Push to Heroku
-1. Make sure your build folder is committed:
+2. **Log in to Container Registry:**
+You must have Docker set up locally to continue. You should see output when you run this command.
 ```bash
-git add frontend/build
-git commit -m "Add frontend build"
+docker ps
 ```
+Now you can sign into Container Registry
 
-2. Push to Heroku:
 ```bash
-git push heroku main
+heroku container:login
 ```
+3. **Push your Docker-based app:**
+Build the Dockerfile in the current directory and push the Docker image
 
-### Step 6: Run DB Migrations (if needed)
-
-If you have SQL schema files:
 ```bash
-heroku pg:psql < schema.sql
+    heroku container:push web
 ```
+
+4. **Deploy the changes:**
+Release the newly pushed images to deploy your app
+
+```bash
+    heroku container:release web
+```
+
 
 ### Step 7: Open Your App
 
 ```bash
 heroku open
 ```
-Your live URL will look like:
+Your live URL will look like: https://health-score-dashboard.herokuapp.com/
+
 React frontend loads.
 
 API routes like `/api/customers` work on the same domain.
+
+
+## Running Application Screenshots
+### Dashboard
+Dashboard overview
+![dashboard](image.png)
+### All customers list
+All customers' list
+![all customersList](image-1.png)
+### Customer details
+Comparison api, login and feature use between last month and this month
+![comparison api, login and feature use between last month and this month](image-2.png)
+Support ticket volume and Invoice payment timeliness
+![Support ticket volume and invoice payment timeliness](image-3.png)
+Collapsed data list
+![collapsed data list](image-4.png)
+Events (api, feature use, login) data history
+![events data](image-5.png)
+Support tickets' data history
+![support tickets data](image-6.png)
+Invoice payment timeliness history
+![Invoices data](image-7.png)

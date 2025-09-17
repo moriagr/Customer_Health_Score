@@ -1,11 +1,14 @@
-# 🧑‍💻 Customer Health Dashboard
+# Customer Health Dashboard
 ### Created by Moria Grohar, 9/2025, moriagro@gmail.com
 A full-stack application for monitoring **customer health scores** based on invoices, tickets, and product usage events.  
 The system provides insights into customer segments, health score trends, and potential risks.  
 
 ---
 
-## 🚀 Features
+## Public URL
+https://health-score-dashboard-75b13036f12a.herokuapp.com/
+
+## Features
 - Dashboard containing top 5 At-risk customers, list to customers list and graphical customers health distribution
 - Customer list with health scores
 - Detailed customer view (events, invoices, tickets)
@@ -16,7 +19,7 @@ The system provides insights into customer segments, health score trends, and po
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 ### Frontend
 - React + TypeScript
 - CSS Modules for styling
@@ -28,11 +31,11 @@ The system provides insights into customer segments, health score trends, and po
 ### Infrastructure
 - Docker & Docker Compose
 - ESLint + Prettier for code quality
-- Jest + React Testing Library for tests
+- Jest + backend Testing Library for tests
 
 ---
 
-## ⚙️ Setup Instructions
+## Setup Instructions
 
 ### 1. Clone Repository
 ```bash
@@ -73,7 +76,7 @@ This will start:
 
 - Postgres DB at localhost:5432
 - Backend at http://localhost:8000/api
-- Frontend at http://localhost:3000
+- Frontend at http://localhost:8000/
 ---
 ## Run without Docker
 
@@ -97,7 +100,7 @@ npm install
 npm start
 ```
 
-Frontend will run on: http://localhost:3000
+Frontend will run on: http://localhost:/8000
 
 ---
 ## Running Tests
@@ -120,7 +123,8 @@ npm test
 
 * **Integration tests:** API endpoints
 
-* **Code Coverage:** 97%
+* **Code Coverage:** 87%
+![Test logs](image.png)
 
 ---
 ## AI Collaboration Evidence
@@ -153,4 +157,11 @@ See [Research Documentation](./documentation/Research_README.md) for more detail
 ---
 ## Architecture Overview
 
-A full-stack app with React frontend, Node.js backend, and PostgreSQL. Calculates customer health scores from events, tickets, and invoices. Containerized with Docker Compose for easy deployment.See [Architecture Overview](./documentation/Architecture_Overview_README.md) for more details.
+A full-stack app with React frontend, Node.js backend, and PostgreSQL. Calculates customer health scores from events, tickets, and invoices. Containerized with Docker Compose for easy deployment. 
+See [Architecture Overview](./documentation/Architecture_Overview_README.md) for more details.
+
+---
+## Deployment Overview
+
+Explanation on how to run the deployments, and application screenshots 
+See [Deployment Overview](./documentation/Deployment_README.md) for more details.

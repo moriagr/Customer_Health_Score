@@ -5,7 +5,7 @@
 
 ### 1. Frontend (React + TypeScript)
 
-- Provides a dashboard and customer views.
+- Provides a responsive dashboard and customer views.
 - Fetches health data and events via REST API calls.
 - Displays charts and tables for quick insights.
 
@@ -79,6 +79,10 @@
 ## Database Diagram
 
 ![Database design](dbDesign.png)
+
+## Data generation
+I created an algorithm that generates data of 50 customers, including customer details, distributed health scores and 3 months of events. This was easier for sample data creation with good distribution, and can be reused and modified in the future to fit new needs.
+The algorithm is currently disabled to stabilize the sample data, but it can be run upon need using by **uncommenting the seeder section in the docker-compose.yml file**. 
 
 ## Key Design Choices
 
