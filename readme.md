@@ -39,7 +39,7 @@ https://health-score-dashboard-75b13036f12a.herokuapp.com/
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/moriagr/customer-health-dashboard.git
+git clone https://github.com/moriagr/Customer_Health_Score.git
 cd customer-health-dashboard
 ```
 

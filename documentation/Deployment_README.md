@@ -7,7 +7,7 @@ https://health-score-dashboard-75b13036f12a.herokuapp.com/
    
 ## Prerequisites
 
-- Clone the repo from https://github.com/moriagr/customer-health-dashboard.git.
+- Clone the repo from https://github.com/moriagr/Customer_Health_Score.git
 - [Docker](https://docs.docker.com/get-docker/) installed
 - [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) installed
 - A Heroku account
